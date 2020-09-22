@@ -30,13 +30,13 @@ while True:
     light_sequence = [0, 0, 0, 0]
     if joystick:
         if axis_input[0] > 0:
-            light_sequence[0] == 1
+            light_sequence[0] == '1'
         elif axis_input[0] < 0:
-            light_sequence[2] == 1
+            light_sequence[2] == '1'
         if axis_input[1] > 0:
-            light_sequence[1] == 1
+            light_sequence[1] == '1'
         elif axis_input[1] < 0:
-            light_sequence[3] == 1
+            light_sequence[3] == '1'
     else:
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
             light_sequence[i[0]] = str(key_in[i[1]])
