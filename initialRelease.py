@@ -9,7 +9,7 @@ import socket
 import pygame as pg
 inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#inter.connect(('192.168.1.59', 8080))
+inter.connect(('192.168.1.59', 8080))
 
 pg.init()
 c = pg.time.Clock()
