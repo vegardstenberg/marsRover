@@ -32,14 +32,14 @@ def loop():
 		if decoded_data[0] == '1':
 			print("forward")
 
-		elif decoded_data[1] == '1':
+		elif decoded_data[2] == '1':
 			print("backwards")
 
-		if decoded_data[2] == '1':
-			print("right")
+		if decoded_data[1] == '1':
+			print("left")
 
 		elif decoded_data[3] == '1':
-			print("left")
+			print("right")
 
 		print(data)
 		for key in enumerate(data):
