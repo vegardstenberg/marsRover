@@ -27,16 +27,18 @@ def loop():
 	        data = connection.recv(4096)
 	        if not data: break
 
-		if data == b'1':
+		decoded_data = data.decode('utf-8')
+
+		if decoded_data[0] == '1':
 			print("forward")
 
-		elif data == b'1':
+		elif decoded_data[1] == '1':
 			print("backwards")
 
-		if data == b'1':
+		if decoded_data[2] == '1':
 			print("right")
 
-		elif data == b'1':
+		elif decoded_data[3] == '1':
 			print("left")
 
 		print(data)
