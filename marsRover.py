@@ -23,8 +23,6 @@ def loop():
 	    connection = inter.accept()[0]
 
 		data = connection.recv(4096)
-	    while not data:
-	        data = connection.recv(4096)
 
 		direction = data.split()
 		print(data)
