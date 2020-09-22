@@ -5,6 +5,7 @@ import socket
 outs = [15, 7, 14, 18]
 
 def setup():
+	global inter
 	GPIO.setmode(GPIO.BCM)
 
 	for out in outs:
@@ -33,7 +34,7 @@ def loop():
 
 		if direction[2] == 1:
 			print("right")
-			
+
 		elif direction[3] == 1:
 			print("left")
 
