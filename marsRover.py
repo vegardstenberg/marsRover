@@ -20,7 +20,25 @@ while True:
     while True:
         data = connection.recv(4096)
         if not data: break
-	
+
+	direction = data.split()
+
+	if(direction[0] == 1)
+	{
+		print("forward")
+	} elif(direction[1] == 1)
+	{
+		print("backwards")
+	}
+
+	if(direction[2] == 1)
+	{
+		print("right")
+	} elif(direction[3] == 1)
+	{
+		print("left")
+	}
+
 	for key in enumerate(data):
 		print(key)
 		GPIO.output(outs[int(key[0])], int(key[1]))
