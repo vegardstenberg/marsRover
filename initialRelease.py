@@ -19,7 +19,7 @@ try: joystick = pg.joystick.Joystick(0)
 except pg.error: joystick = None
 else: joystick.init()
 
-axis_input = (0, 0)
+axis_input = [0, 0]
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT: exit()
