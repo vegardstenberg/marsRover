@@ -13,13 +13,14 @@ def setup():
 		GPIO.setup(out, GPIO.OUT)
 
 def loop():
+	global connection
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 	inter.bind(('192.168.1.59', 8080))
 	inter.listen(5)
 
 	while True:
-	    global connection = inter.accept()[0]
+	    connection = inter.accept()[0]
 
 	    while True:
 	        data = connection.recv(4096)
