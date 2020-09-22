@@ -27,7 +27,7 @@ def loop():
 	        data = connection.recv(4096)
 	        if not data: break
 
-		direction = [i for i in data]
+		direction = [i for i in data.decode('utf-8')]
 
 		if direction[0] == 1:
 			print("forward")
