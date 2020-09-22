@@ -19,7 +19,7 @@ def loop():
 	inter.listen(5)
 
 	while True:
-	    connection = inter.accept()[0]
+	    global connection = inter.accept()[0]
 
 	    while True:
 	        data = connection.recv(4096)
