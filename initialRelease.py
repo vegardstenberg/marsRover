@@ -7,6 +7,7 @@ Created on Thu Sep  3 11:27:40 2020
 
 import socket
 import pygame as pg
+from sys import exit
 inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 inter.connect(('192.168.1.59', 8080))
@@ -17,7 +18,7 @@ screen = pg.display.set_mode((1280, 720), pg.RESIZABLE)
 
 while True:
     for event in pg.event.get():
-        pass
+        if event.type == pg.QUIT: exit()
     c.tick(5)
     key_in = pg.key.get_pressed()
     light_sequence = [0, 0, 0, 0]
