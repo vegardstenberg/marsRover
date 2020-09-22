@@ -19,15 +19,13 @@ def setup():
 
 def loop():
 	global connection
-	
+
 	while True:
 	    connection = inter.accept()[0]
 
 	    while True:
 	        data = connection.recv(4096)
 	        if not data: break
-
-		direction = split(data)
 
 		if direction[0] == 1:
 			print("forward")
