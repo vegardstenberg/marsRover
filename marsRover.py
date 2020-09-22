@@ -20,7 +20,7 @@ while True:
     while True:
         data = connection.recv(4096)
         if not data: break
-	
+
 	for key in enumerate(data):
 		print(key)
 		GPIO.output(outs[int(key[0])], int(key[1]))
