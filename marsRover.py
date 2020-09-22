@@ -9,16 +9,17 @@ def setup():
 	global inter
 	GPIO.setmode(GPIO.BCM)
 
-	for out in outs:
-		GPIO.setup(out, GPIO.OUT)
-
-def loop():
-	global connection
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 	inter.bind(('192.168.1.59', 8080))
 	inter.listen(5)
 
+	for out in outs:
+		GPIO.setup(out, GPIO.OUT)
+
+def loop():
+	global connection
+	
 	while True:
 	    connection = inter.accept()[0]
 
@@ -26,8 +27,8 @@ def loop():
 	        data = connection.recv(4096)
 	        if not data: break
 
-		direction = data.split()
-		'''
+		direction = split(data)
+
 		if direction[0] == 1:
 			print("forward")
 
@@ -39,7 +40,7 @@ def loop():
 
 		elif direction[3] == 1:
 			print("left")
-		'''
+
 		print(data)
 		for key in enumerate(data):
 			print(key)
