@@ -27,7 +27,7 @@ def loop():
 	        data = connection.recv(4096)
 	        if not data: break
 
-		data = data[-4]
+		data = data[-4:]
 
 		decoded_data = data.decode('utf-8')
 
