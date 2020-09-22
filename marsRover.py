@@ -4,6 +4,7 @@ import socket
 
 outs = [15, 7, 14, 18]
 
+
 def setup():
 	global inter
 	GPIO.setmode(GPIO.BCM)
@@ -11,12 +12,12 @@ def setup():
 	for out in outs:
 		GPIO.setup(out, GPIO.OUT)
 
+def loop():
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 	inter.bind(('192.168.1.59', 8080))
 	inter.listen(5)
 
-def loop():
 	while True:
 	    connection = inter.accept()[0]
 
