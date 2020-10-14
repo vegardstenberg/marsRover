@@ -28,7 +28,7 @@ def loop():
 
 	    while True:
 	        data = connection.recv(4096)
-	        if data: break
+	        if not data: break
 
 		decoded_data = data[-4:].decode('utf-8')
 
