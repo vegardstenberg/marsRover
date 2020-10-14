@@ -57,6 +57,20 @@ while True:
 
     light_string = ''.join(light_sequence).encode('utf-8')
     inter.sendall(light_string)
+    cool_font = pg.freetype.SysFont('Arial', 70)
+
+    text = {
+        'w': cool_font.render('W'),
+        'a': cool_font.render('A'),
+        's': cool_font.render('S'),
+        'd': cool_font.render('D'),
+    }
+
+    text['w'][1].center = w.center
+    text['a'][1].center = a.center
+    text['s'][1].center = s.center
+    text['d'][1].center = d.center
+
 
     if int(light_sequence[0]):
         pg.draw.rect(screen, (255, 0, 0), (120, 50, 80, 80))
@@ -66,6 +80,9 @@ while True:
         pg.draw.rect(screen, (255, 0, 0), (120, 160, 80, 80))
     if int(light_sequence[3]):
         pg.draw.rect(screen, (255, 0, 0), (230, 160, 80, 80))
+    for i in ['w', 'a', 's', 'd']:
+        screen.blit(*text[i])
+
     pg.display.flip()
     screen.fill((0, 0, 0))
 
