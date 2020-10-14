@@ -68,6 +68,6 @@ if __name__ == '__main__':
 	setup()
 	try:
 		loop()
-	except: #Exception as e:
+	except KeyboardInterrupt: #Exception as e:
 		#print(e)
 		stop()
