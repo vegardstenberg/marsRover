@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import time
 import socket
 from roboclaw import Roboclaw
@@ -10,7 +10,7 @@ def setup():
 	global address
 	global roboclaw
 
-	GPIO.setmode(GPIO.BCM)
+	#GPIO.setmode(GPIO.BCM)
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -61,7 +61,7 @@ def loop():
 
 def stop():
 	connection.close()
-	GPIO.cleanup()
+	#GPIO.cleanup()
 	print("Stopping")
 
 if __name__ == '__main__':
