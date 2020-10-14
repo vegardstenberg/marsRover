@@ -7,6 +7,7 @@ Created on Thu Sep  3 11:27:40 2020
 
 import socket
 import pygame as pg
+from pygame import freetype
 from sys import exit
 inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
