@@ -30,7 +30,8 @@ def loop():
 	        data = connection.recv(4096)
 	        if not data: break
 
-		decoded_data = data[-4:].decode('utf-8')
+		data = data[-4:]
+		decoded_data = data.decode('utf-8')
 
 		if decoded_data[0] == '1':
 			print("forward")
