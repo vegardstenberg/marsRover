@@ -68,6 +68,6 @@ if __name__ == '__main__':
 	setup()
 	try:
 		loop()
-	except Exception as e:
-		print(e)
+	except: #Exception as e:
+		#print(e)
 		stop()
