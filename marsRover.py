@@ -4,7 +4,6 @@ import socket
 
 outs = [15, 7, 14, 18]
 
-
 def setup():
 	global inter
 	GPIO.setmode(GPIO.BCM)
@@ -17,19 +16,21 @@ def setup():
 	for out in outs:
 		GPIO.setup(out, GPIO.OUT)
 
+	print("Setting up")
+
 def loop():
 	global connection
+
+	print("Running")
 
 	while True:
 	    connection = inter.accept()[0]
 
 	    while True:
 	        data = connection.recv(4096)
-	        if not data: break
+	        if data: break
 
-		data = data[-4:]
-
-		decoded_data = data.decode('utf-8')
+		decoded_data = data[-4:].decode('utf-8')
 
 		if decoded_data[0] == '1':
 			print("forward")
@@ -43,19 +44,17 @@ def loop():
 		elif decoded_data[3] == '1':
 			print("right")
 
-		print(data)
 		for key in enumerate(data):
-			print(key)
 			GPIO.output(outs[int(key[0])], int(key[1]))
 
 def stop():
 	connection.close()
-
 	GPIO.cleanup()
+	print("Stopping")
 
 if __name__ == '__main__':
 	setup()
 	try:
 		loop()
-	except KeyboardInterrupt:
+	except:
 		stop()
