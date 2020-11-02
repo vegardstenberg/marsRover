@@ -43,12 +43,18 @@ def loop():
 
 		if decoded_data[0] == '1':
 			roboclaw.ForwardM1(address, 64)
-			print("forward")
+			roboclaw.ForwardM2(address, 64)
 		else:
 			roboclaw.ForwardM1(address, 0)
+			roboclaw.ForwardM2(address, 0)
 
 		if decoded_data[2] == '1':
-			print("backwards")
+			roboclaw.BackwardM1(address, 64)
+			roboclaw.BackwardM2(address, 64)
+			print("forward")
+		else:
+			roboclaw.BackwardM1(address, 0)
+			roboclaw.BackwardM2(address, 0)
 
 		if decoded_data[1] == '1':
 			print("left")
