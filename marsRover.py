@@ -7,7 +7,9 @@ from roboclaw import Roboclaw
 
 def setup():
 	global inter
-	global address
+	global address1
+	global address2
+	global address3
 	global roboclaw
 
 	#GPIO.setmode(GPIO.BCM)
