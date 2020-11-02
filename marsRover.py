@@ -18,7 +18,7 @@ def setup():
 	inter.listen(5)
 
 	address = 0x80
-	roboclaw = Roboclaw("/dev/tty50", 38400)
+	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
 	#for out in outs:
