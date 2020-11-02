@@ -1,16 +1,16 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import time
 import socket
 from roboclaw import Roboclaw
 
-outs = [15, 7, 14, 18]
+#outs = [15, 7, 14, 18]
 
 def setup():
 	global inter
 	global address
 	global roboclaw
 
-	GPIO.setmode(GPIO.BCM)
+	#GPIO.setmode(GPIO.BCM)
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -21,8 +21,8 @@ def setup():
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
-	for out in outs:
-		GPIO.setup(out, GPIO.OUT)
+	#for out in outs:
+	#	GPIO.setup(out, GPIO.OUT)
 
 	print("Setting up")
 
@@ -56,12 +56,12 @@ def loop():
 		if decoded_data[3] == '1':
 			print("right")
 
-		for key in enumerate(data):
-			GPIO.output(outs[int(key[0])], int(key[1]))
+		#for key in enumerate(data):
+		#	GPIO.output(outs[int(key[0])], int(key[1]))
 
 def stop():
 	connection.close()
-	GPIO.cleanup()
+	#GPIO.cleanup()
 	print("Stopping")
 
 if __name__ == '__main__':
