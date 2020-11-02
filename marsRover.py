@@ -44,7 +44,6 @@ def loop():
 
 		data = data[-4:]
 		decoded_data = data.decode('utf-8')
-		print(decoded_data)
 
 		if decoded_data[0] == '1':
 			roboclaw.ForwardM1(address1, 64)
