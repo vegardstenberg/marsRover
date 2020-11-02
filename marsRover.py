@@ -17,7 +17,9 @@ def setup():
 	inter.bind(('192.168.1.59', 8080))
 	inter.listen(5)
 
-	address = 0x80
+	address1 = 0x80
+	address2 = 0x81
+	address3 = 0x82
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
@@ -42,21 +44,25 @@ def loop():
 		decoded_data = data.decode('utf-8')
 
 		if decoded_data[0] == '1':
-			roboclaw.ForwardM1(address, 64)
-			roboclaw.ForwardM2(address, 64)
+			roboclaw.ForwardM1(address1, 64)
+			roboclaw.ForwardM2(address1, 64)
 			print("forward")
 		elif decoded_data[2] == '1':
-			roboclaw.BackwardM1(address, 64)
-			roboclaw.BackwardM2(address, 64)
+			roboclaw.BackwardM1(address1, 64)
+			roboclaw.BackwardM2(address1, 64)
 			print("backwards")
 		else:
-			roboclaw.BackwardM1(address, 0)
-			roboclaw.BackwardM2(address, 0)
+			roboclaw.BackwardM1(address1, 0)
+			roboclaw.BackwardM2(address1, 0)
 
 		if decoded_data[1] == '1':
+			roboclaw.ForwardM1(address2, 64)
+			roboclaw.BackwardM2(address2, 64)
 			print("left")
 
 		if decoded_data[3] == '1':
+			roboclaw.ForwardM2(address2, 64)
+			roboclaw.BackwardM1(address2, 64)
 			print("right")
 
 		#for key in enumerate(data):
