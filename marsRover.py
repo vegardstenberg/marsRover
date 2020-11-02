@@ -10,7 +10,7 @@ def setup():
 	global address
 	global roboclaw
 
-	#GPIO.setmode(GPIO.BCM)
+	GPIO.setmode(GPIO.BCM)
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
