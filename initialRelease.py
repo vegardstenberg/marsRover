@@ -42,8 +42,8 @@ while True:
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
             light_sequence[i[0]] = str(key_in[i[1]])
 
-    w = pg.draw.rect(screen, (255, 255, 255), (0, 150, 100, 100))
-    a = pg.draw.rect(screen, (255, 255, 255), (110, 40, 100, 100))
+    w = pg.draw.rect(screen, (255, 255, 255), (110, 40, 100, 100))
+    a = pg.draw.rect(screen, (255, 255, 255), (0, 150, 100, 100))
     s = pg.draw.rect(screen, (255, 255, 255), (110, 150, 100, 100))
     d = pg.draw.rect(screen, (255, 255, 255), (220, 150, 100, 100))
     if pg.mouse.get_pressed(1)[0]:
