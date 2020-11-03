@@ -23,12 +23,15 @@ else: joystick.init()
 axis_input = [0, 0]
 while True:
     c.tick(30)
+
     for event in pg.event.get():
         if event.type == pg.QUIT: exit()
         elif joystick and event.type == pg.JOYAXISMOTION:
             axis_input[event.axis] = event.value if abs(event.value) > 0.2 else 0
+
     key_in = pg.key.get_pressed()
     light_sequence = ['0', '0', '0', '0']
+
     if joystick:
         if axis_input[0] < 0:
             light_sequence[1] = '1'
@@ -46,6 +49,7 @@ while True:
     a = pg.draw.rect(screen, (255, 255, 255), (0, 150, 100, 100))
     s = pg.draw.rect(screen, (255, 255, 255), (110, 150, 100, 100))
     d = pg.draw.rect(screen, (255, 255, 255), (220, 150, 100, 100))
+
     if pg.mouse.get_pressed(1)[0]:
         if w.collidepoint(pg.mouse.get_pos()):
             light_sequence[1] = '1'

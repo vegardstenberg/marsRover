@@ -19,9 +19,10 @@ def setup():
 	inter.bind(('192.168.1.59', 8080))
 	inter.listen(5)
 
-	address1 = 0x80
-	address2 = 0x81
-	address3 = 0x82
+	address1 = 0x80 //front motors
+	address2 = 0x81 //mid motors
+	address3 = 0x82 //back motors
+
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
@@ -47,15 +48,21 @@ def loop():
 
 		if decoded_data[0] == '1':
 			roboclaw.ForwardM1(address1, 64)
-			roboclaw.ForwardM2(address1, 64)
+			roboclaw.ForwardM2(address1, 64
+			roboclaw.ForwardM1(address3, 64)
+			roboclaw.ForwardM2(address3, 64)
 			print("forward")
 		elif decoded_data[2] == '1':
 			roboclaw.BackwardM1(address1, 64)
 			roboclaw.BackwardM2(address1, 64)
+			roboclaw.BackwardM1(address3, 64)
+			roboclaw.BackwardM2(address3, 64)
 			print("backwards")
 		else:
 			roboclaw.BackwardM1(address1, 0)
 			roboclaw.BackwardM2(address1, 0)
+			roboclaw.BackwardM1(address3, 0)
+			roboclaw.BackwardM2(address3, 0)
 
 		if decoded_data[1] == '1':
 			roboclaw.ForwardM1(address2, 64)
