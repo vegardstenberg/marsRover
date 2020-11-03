@@ -11,9 +11,42 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame as pg
 from pygame import freetype
 from sys import exit
+import time
 
 def text_controlls():
     print("Text controlls activated")
+
+    while True:
+        command = input("Available commands: FORWARD, BACKWARD, LEFT, RIGHT. ").lower().split(" ")
+        light_sequence = ['0', '0', '0', '0']
+
+        try:
+            dir = command[0]
+            val = int(command[1])
+        except:
+            print("Invalid format, please try again.")
+
+        end_time = time.time() + val
+
+        while time.time() < end_time:
+            if dir == "forward":
+                light_sequence[0] = '1'
+                print("forward")
+            elif dir == "backward":
+                light_sequence[2] = '1'
+                print("backward")
+            elif dir == "right":
+                light_sequence[3] = '1'
+                print("right")
+            elif dir == "left":
+                light_sequence[1] = '1'
+                print("left ")
+
+            light_string = ''.join(light_sequence).encode('utf-8')
+            inter.sendall(light_string)
+
+        light_string = ''.join(light_sequence).encode('utf-8')
+        inter.sendall(light_string)
 
 def WASD_controlls():
     print("WASD controlls activated.")
@@ -82,7 +115,6 @@ def WASD_controlls():
         text['s'][1].center = s.center
         text['d'][1].center = d.center
 
-
         if int(light_sequence[0]):
             pg.draw.rect(screen, (255, 0, 0), (120, 50, 80, 80))
         if int(light_sequence[1]):
@@ -99,17 +131,17 @@ def WASD_controlls():
 
 if __name__ == '__main__':
     print("Trying to establish a connection with the rover...")
-    inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    global inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     inter.connect(('192.168.1.59', 8080))
     print("Connection established.")
 
-    controlls_choice = input("Which type of controlls do you want? Available choices: 'WASD' or 'Text'")
+    controlls_choice = input("Which type of controlls do you want? Available choices: 'WASD' or 'Text' ")
     while True:
         if controlls_choice.lower() == "wasd":
             WASD_controlls()
         elif controlls_choice.lower() == "text":
             text_controlls()
         else:
-            controlls_choice = input("Not a valid choice. Available choices: 'WASD' or 'Text'")
+            controlls_choice = input("Not a valid choice. Available choices: 'WASD' or 'Text' ")
 
 inter.close()
