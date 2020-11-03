@@ -2,6 +2,7 @@
 import time
 import socket
 from roboclaw import Roboclaw
+import constants as c
 
 #outs = [15, 7, 14, 18]
 
@@ -16,7 +17,7 @@ def setup():
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-	inter.bind(('192.168.1.59', 8080))
+	inter.bind((c.pi_ip, 8080))
 	inter.listen(5)
 
 	address1 = 0x80 //front motors

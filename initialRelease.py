@@ -11,16 +11,18 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame as pg
 from pygame import freetype
 from sys import exit
+from traceback import print_tb
+import constants as c
 
-def text_controlls():
+def text_controls():
     print("Text controlls activated")
 
-def WASD_controlls():
-    print("WASD controlls activated.")
+def fancy_controls():
+    print("Fancy controlls activated.")
 
     pg.init()
-    c = pg.time.Clock()
-    screen = pg.display.set_mode((1280, 720), pg.RESIZABLE)
+    clk = pg.time.Clock()
+    screen = pg.display.set_mode(c.pg_screen_res, pg.RESIZABLE)
     try: joystick = pg.joystick.Joystick(0)
     except pg.error: joystick = None
     else: joystick.init()
@@ -28,14 +30,13 @@ def WASD_controlls():
     axis_input = [0, 0]
 
     while True:
-        c.tick(30)
+        clk.tick(30)
 
         for event in pg.event.get():
-            if event.type == pg.QUIT: exit()
-            elif joystick and event.type == pg.JOYAXISMOTION:
+            if event.type == pg.QUIT: exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
+            elif joystick and event.type == pg.JOYAXISMOTION and event.axis < 2:
                 axis_input[event.axis] = event.value if abs(event.value) > 0.2 else 0
 
-        key_in = pg.key.get_pressed()
         light_sequence = ['0', '0', '0', '0']
 
         if joystick:
@@ -47,9 +48,10 @@ def WASD_controlls():
                 light_sequence[0] = '1'
             elif axis_input[1] > 0:
                 light_sequence[2] = '1'
-        else:
-            for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
-                light_sequence[i[0]] = str(key_in[i[1]])
+
+        key_in = pg.key.get_pressed()
+        for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
+            if light_sequence[i[0]] != 1: light_sequence[i[0]] = str(key_in[i[1]])
 
         w = pg.draw.rect(screen, (255, 255, 255), (110, 40, 100, 100))
         a = pg.draw.rect(screen, (255, 255, 255), (0, 150, 100, 100))
@@ -58,18 +60,19 @@ def WASD_controlls():
 
         if pg.mouse.get_pressed(1)[0]:
             if w.collidepoint(pg.mouse.get_pos()):
-                light_sequence[1] = '1'
-            if a.collidepoint(pg.mouse.get_pos()):
                 light_sequence[0] = '1'
+            if a.collidepoint(pg.mouse.get_pos()):
+                light_sequence[1] = '1'
             if s.collidepoint(pg.mouse.get_pos()):
                 light_sequence[2] = '1'
             if d.collidepoint(pg.mouse.get_pos()):
                 light_sequence[3] = '1'
 
-        light_string = ''.join(light_sequence).encode('utf-8')
-        inter.sendall(light_string)
-        cool_font = pg.freetype.SysFont('Arial', 70)
+        if connect_query == 'y':
+            light_string = ''.join(light_sequence).encode('utf-8')
+            inter.sendall(light_string)
 
+        cool_font = pg.freetype.SysFont('Arial', 70)
         text = {
             'w': cool_font.render('W'),
             'a': cool_font.render('A'),
@@ -98,18 +101,33 @@ def WASD_controlls():
         screen.fill((0, 0, 0))
 
 if __name__ == '__main__':
-    print("Trying to establish a connection with the rover...")
-    inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    inter.connect(('192.168.1.59', 8080))
-    print("Connection established.")
-
-    controlls_choice = input("Which type of controlls do you want? Available choices: 'WASD' or 'Text'")
     while True:
-        if controlls_choice.lower() == "wasd":
-            WASD_controlls()
-        elif controlls_choice.lower() == "text":
-            text_controlls()
+        connect_query = input('Want to connect to the rover? (y/n): ').lower()
+        if connect_query == 'y':
+            print("Trying to establish a connection with the rover...")
+            try:
+                inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                inter.connect((c.pi_ip, 8080))
+            except:
+                print('Could not connect to the rover. Continuing without connection...')
+                connect_query = 'n'
+            else: print("Connection established.")
+            break
+        elif connect_query == 'n': break
+        else: print('Please enter a valid response')
+
+    control_opts = {'fancy': fancy_controls, 'text': text_controls}
+    while True:
+        controls_choice = input('Which type of controlls do you want? (fancy/text): ').lower()
+        if controls_choice not in control_opts.keys():
+            controls_choice = print('Please enter a valid response')
         else:
-            controlls_choice = input("Not a valid choice. Available choices: 'WASD' or 'Text'")
+            try:
+                while True:
+                    control_opts[controls_choice]()
+            except Exception as e:
+                print_tb(e.__traceback__)
+                print(f'{type(e).__name__}: {e}')
+                input()
 
 inter.close()
