@@ -49,7 +49,7 @@ def text_controls():
             print("Invalid format, please try again.")
 
         end_time = time.time() + val
-        
+
 def WASD_controlls():
     print("WASD controlls activated.")
 
@@ -89,10 +89,10 @@ def fancy_controls():
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
             if light_sequence[i[0]] != 1: light_sequence[i[0]] = str(key_in[i[1]])
 
-        w = pg.draw.rect(screen, (255, 255, 255), (110, 40, 100, 100))
-        a = pg.draw.rect(screen, (255, 255, 255), (0, 150, 100, 100))
-        s = pg.draw.rect(screen, (255, 255, 255), (110, 150, 100, 100))
-        d = pg.draw.rect(screen, (255, 255, 255), (220, 150, 100, 100))
+        w = pg.draw.rect(screen, c.rgb_white, (110, 40, 100, 100))
+        a = pg.draw.rect(screen, c.rgb_white, (0, 150, 100, 100))
+        s = pg.draw.rect(screen, c.rgb_white, (110, 150, 100, 100))
+        d = pg.draw.rect(screen, c.rgb_white, (220, 150, 100, 100))
 
         if pg.mouse.get_pressed(1)[0]:
             if w.collidepoint(pg.mouse.get_pos()):
@@ -108,12 +108,11 @@ def fancy_controls():
             light_string = ''.join(light_sequence).encode('utf-8')
             inter.sendall(light_string)
 
-        cool_font = pg.freetype.SysFont('Arial', 70)
         text = {
-            'w': cool_font.render('W'),
-            'a': cool_font.render('A'),
-            's': cool_font.render('S'),
-            'd': cool_font.render('D'),
+            'w': c.font_arial.render('W'),
+            'a': c.font_arial.render('A'),
+            's': c.font_arial.render('S'),
+            'd': c.font_arial.render('D'),
         }
 
         text['w'][1].center = w.center
@@ -122,13 +121,13 @@ def fancy_controls():
         text['d'][1].center = d.center
 
         if int(light_sequence[0]):
-            pg.draw.rect(screen, (255, 0, 0), (120, 50, 80, 80))
+            pg.draw.rect(screen, c.rgb_red, (120, 50, 80, 80))
         if int(light_sequence[1]):
-            pg.draw.rect(screen, (255, 0, 0), (10, 160, 80, 80))
+            pg.draw.rect(screen, c.rgb_red, (10, 160, 80, 80))
         if int(light_sequence[2]):
-            pg.draw.rect(screen, (255, 0, 0), (120, 160, 80, 80))
+            pg.draw.rect(screen, c.rgb_red, (120, 160, 80, 80))
         if int(light_sequence[3]):
-            pg.draw.rect(screen, (255, 0, 0), (230, 160, 80, 80))
+            pg.draw.rect(screen, c.rgb_red, (230, 160, 80, 80))
         for i in ['w', 'a', 's', 'd']:
             screen.blit(*text[i])
 
