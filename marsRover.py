@@ -1,7 +1,7 @@
 #import RPi.GPIO as GPIO
 import time
 import socket
-import Roboclaw as roboclaw 
+from Roboclaw import roboclaw
 import constants as c
 
 #outs = [15, 7, 14, 18]
@@ -38,18 +38,18 @@ def loop():
 	print("Running")
 
 	while True:
-	    connection = inter.accept()[0]
+		connection = inter.accept()[0]
 
-	    while True:
-	        data = connection.recv(4096)
-	        if not data: break
+		while True:
+			data = connection.recv(4096)
+			if not data: break
 
 		data = data[-4:]
 		decoded_data = data.decode('utf-8')
 
 		if decoded_data[0] == '1':
 			roboclaw.ForwardM1(address1, 64)
-			roboclaw.ForwardM2(address1, 64
+			roboclaw.ForwardM2(address1, 64)
 			roboclaw.ForwardM1(address3, 64)
 			roboclaw.ForwardM2(address3, 64)
 			print("forward")
