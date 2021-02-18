@@ -1,7 +1,7 @@
 #import RPi.GPIO as GPIO
 import time
 import socket
-from roboclaw import Roboclaw
+import Roboclaw as roboclaw 
 import constants as c
 
 #outs = [15, 7, 14, 18]
