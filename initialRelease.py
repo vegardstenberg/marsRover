@@ -106,6 +106,7 @@ def fancy_controls():
 
         if connect_query == 'y':
             light_string = ''.join(light_sequence).encode('utf-8')
+            print(light_string)
             inter.sendall(light_string)
 
         text = {
