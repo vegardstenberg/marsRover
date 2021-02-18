@@ -40,9 +40,8 @@ def loop():
 	while True:
 		connection = inter.accept()[0]
 
-		while True:
-			data = connection.recv(4096)
-			if not data: break
+		data = connection.recv(4096)
+		if not data: break
 
 		data = data[-4:]
 		decoded_data = data.decode('utf-8')
