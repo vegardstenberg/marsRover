@@ -48,6 +48,9 @@ def text_controls():
                     print("left")
                 send_data(light_sequence)
 
+        except KeyboardInterrupt:
+            print('Movement aborted')
+
         except:
             print("Invalid format, please try again.")
 
