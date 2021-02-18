@@ -71,7 +71,7 @@ def fancy_controls():
 
     while True:
         clk.tick(30)
-        screen.fill((0, 0, 0))
+        screen.fill(c.rgb_black)
 
         for event in pg.event.get():
             if event.type == pg.QUIT: exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
@@ -98,13 +98,17 @@ def fancy_controls():
             light_index,
             letter,
             c.font_arial.render(letter.upper()),
-            pg.draw.rect(screen, c.rgb_white, (abs(-110 + light_index * 110), 40 if light_index == 0 else 150, 100, 100)))
+            pg.draw.rect(
+                screen,
+                c.rgb_white,
+                (abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin,
+                c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, c.button_size, c.button_size)))
             for light_index, letter in enumerate('wasd'))
 
         for light_index, letter, text, button_rect in text_buttons:
             if pg.mouse.get_pressed()[0] and button_rect.collidepoint(pg.mouse.get_pos()): #If this doesn't work, update pygame
                 light_sequence[light_index] = '1'
-                pg.draw.rect(screen, c.rgb_red, button_rect.inflate(-20, -20))
+                pg.draw.rect(screen, c.rgb_red, button_rect.inflate(-2 * c.button_margin, -2 * c.button_margin))
             text[1].center = button_rect.center
             screen.blit(*text)
 
