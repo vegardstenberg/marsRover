@@ -15,6 +15,12 @@ import time
 from traceback import print_tb
 import constants as c
 
+def send_data(bytes_list):
+    if connect_query == 'n': return
+    bytes_string = ''.join(bytes_list).encode('utf-8')
+    print(bytes_string)
+    inter.sendall(bytes_string)
+
 def text_controls():
     print("Text controlls activated")
 
@@ -25,30 +31,25 @@ def text_controls():
         try:
             dir = command[0]
             val = int(command[1])
+            end_time = time.time() + val
 
             while time.time() < end_time:
-                if dir == "forward":
+                if dir in ('forward', 'forwards', 'f', 'w'):
                     light_sequence[0] = '1'
                     print("forward")
-                elif dir == "backward":
+                elif dir in ('backward', 'backwards', 'b', 's'):
                     light_sequence[2] = '1'
                     print("backward")
-                elif dir == "right":
+                elif dir in ('right', 'r', 'd'):
                     light_sequence[3] = '1'
                     print("right")
-                elif dir == "left":
+                elif dir in ('left', 'l', 'a'):
                     light_sequence[1] = '1'
-                    print("left ")
+                    print("left")
+                send_data(light_sequence)
 
-                light_string = ''.join(light_sequence).encode('utf-8')
-                inter.sendall(light_string)
-
-            light_string = ''.join(light_sequence).encode('utf-8')
-            inter.sendall(light_string)
         except:
             print("Invalid format, please try again.")
-
-        end_time = time.time() + val
 
 def WASD_controlls():
     print("WASD controlls activated.")
@@ -106,15 +107,13 @@ def fancy_controls():
 
         pg.display.flip()
 
-        if connect_query == 'y':
-            light_string = ''.join(light_sequence).encode('utf-8')
-            print(light_string)
-            inter.sendall(light_string)
+        send_data(light_sequence)
 
 if __name__ == '__main__':
     while True:
         connect_query = input('Want to connect to the rover? (y/n): ').lower()
-        if connect_query == 'y':
+        if connect_query in ('y', 'yes'):
+            connect_query = 'y'
             print("Trying to establish a connection with the rover...")
             try:
                 inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -124,7 +123,9 @@ if __name__ == '__main__':
                 connect_query = 'n'
             else: print("Connection established.")
             break
-        elif connect_query == 'n': break
+        elif connect_query in ('n', 'no'):
+            connect_query = 'n'
+            break
         else: print('Please enter a valid response')
 
     control_opts = {'fancy': fancy_controls, 'text': text_controls}
