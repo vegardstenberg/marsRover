@@ -94,7 +94,7 @@ def fancy_controls():
         s = pg.draw.rect(screen, c.rgb_white, (110, 150, 100, 100))
         d = pg.draw.rect(screen, c.rgb_white, (220, 150, 100, 100))
 
-        if pg.mouse.get_pressed(1)[0]:
+        if pg.mouse.get_pressed()[0]: #If this doesn't work, update pygame
             if w.collidepoint(pg.mouse.get_pos()):
                 light_sequence[0] = '1'
             if a.collidepoint(pg.mouse.get_pos()):
