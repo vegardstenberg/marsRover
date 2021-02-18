@@ -67,6 +67,7 @@ def fancy_controls():
 
     while True:
         clk.tick(30)
+        screen.fill((0, 0, 0))
 
         for event in pg.event.get():
             if event.type == pg.QUIT: exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
@@ -89,51 +90,26 @@ def fancy_controls():
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
             if light_sequence[i[0]] != 1: light_sequence[i[0]] = str(key_in[i[1]])
 
-        w = pg.draw.rect(screen, c.rgb_white, (110, 40, 100, 100))
-        a = pg.draw.rect(screen, c.rgb_white, (0, 150, 100, 100))
-        s = pg.draw.rect(screen, c.rgb_white, (110, 150, 100, 100))
-        d = pg.draw.rect(screen, c.rgb_white, (220, 150, 100, 100))
+        text_buttons = ((
+            light_index,
+            letter,
+            c.font_arial.render(letter.upper()),
+            pg.draw.rect(screen, c.rgb_white, (abs(-110 + light_index * 110), 40 if light_index == 0 else 150, 100, 100)))
+            for light_index, letter in enumerate('wasd'))
 
-        if pg.mouse.get_pressed()[0]: #If this doesn't work, update pygame
-            if w.collidepoint(pg.mouse.get_pos()):
-                light_sequence[0] = '1'
-            if a.collidepoint(pg.mouse.get_pos()):
-                light_sequence[1] = '1'
-            if s.collidepoint(pg.mouse.get_pos()):
-                light_sequence[2] = '1'
-            if d.collidepoint(pg.mouse.get_pos()):
-                light_sequence[3] = '1'
+        for light_index, letter, text, button_rect in text_buttons:
+            if pg.mouse.get_pressed()[0] and button_rect.collidepoint(pg.mouse.get_pos()): #If this doesn't work, update pygame
+                light_sequence[light_index] = '1'
+                pg.draw.rect(screen, c.rgb_red, button_rect.inflate(-20, -20))
+            text[1].center = button_rect.center
+            screen.blit(*text)
+
+        pg.display.flip()
 
         if connect_query == 'y':
             light_string = ''.join(light_sequence).encode('utf-8')
             print(light_string)
             inter.sendall(light_string)
-
-        text = {
-            'w': c.font_arial.render('W'),
-            'a': c.font_arial.render('A'),
-            's': c.font_arial.render('S'),
-            'd': c.font_arial.render('D'),
-        }
-
-        text['w'][1].center = w.center
-        text['a'][1].center = a.center
-        text['s'][1].center = s.center
-        text['d'][1].center = d.center
-
-        if int(light_sequence[0]):
-            pg.draw.rect(screen, c.rgb_red, (120, 50, 80, 80))
-        if int(light_sequence[1]):
-            pg.draw.rect(screen, c.rgb_red, (10, 160, 80, 80))
-        if int(light_sequence[2]):
-            pg.draw.rect(screen, c.rgb_red, (120, 160, 80, 80))
-        if int(light_sequence[3]):
-            pg.draw.rect(screen, c.rgb_red, (230, 160, 80, 80))
-        for i in ['w', 'a', 's', 'd']:
-            screen.blit(*text[i])
-
-        pg.display.flip()
-        screen.fill((0, 0, 0))
 
 if __name__ == '__main__':
     while True:
