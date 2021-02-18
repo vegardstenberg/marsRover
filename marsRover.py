@@ -49,8 +49,8 @@ def loop():
 			print(decoded_data)
 
 			if decoded_data[0] == '1':
-				#roboclaw.ForwardM1(address1, 64)
-				#roboclaw.ForwardM2(address1, 64)
+				roboclaw.ForwardM1(address1, 64)
+				roboclaw.ForwardM2(address1, 64)
 				roboclaw.ForwardM1(address2, 64)
 				roboclaw.ForwardM2(address2, 64)
 				print("forward")
