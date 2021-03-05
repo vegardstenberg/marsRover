@@ -95,22 +95,27 @@ def fancy_controls():
             if light_sequence[i[0]] != 1: light_sequence[i[0]] = str(key_in[i[1]])
 
         text_buttons = ((
-            light_index,
-            letter,
-            c.font_arial.render(letter.upper()),
-            pg.draw.rect(
-                screen,
-                c.rgb_white,
-                (abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin,
-                c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, c.button_size, c.button_size)))
-            for light_index, letter in enumerate('wasd'))
+            light_index, #Which index in the light string the button corresponds to
+            letter, #Which key the button corresponds to
+            c.font_arial.render(letter.upper()), #Tuple consisting of a rendered surface of the button's key, and the rect for that surface
+            pg.draw.rect( #Draws the button
+                screen, #Surface to blit button on
+                c.rgb_white, #Button color
+                (abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin, #Button margin x-axis
+                c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, #Button margin y-axis
+                c.button_size, #button width
+                c.button_size))) #Button height
+            for light_index, letter in enumerate('wasd')) #Iterate for the keys "w", "a", "s" and "d"
 
-        for light_index, letter, text, button_rect in text_buttons:
-            if pg.mouse.get_pressed()[0] and button_rect.collidepoint(pg.mouse.get_pos()): #If this doesn't work, update pygame
-                light_sequence[light_index] = '1'
-                pg.draw.rect(screen, c.rgb_red, button_rect.inflate(-2 * c.button_margin, -2 * c.button_margin))
-            text[1].center = button_rect.center
-            screen.blit(*text)
+        for light_index, letter, text, button_rect in text_buttons: #Iterates through every piece of information about each button
+            if pg.mouse.get_pressed()[0] and button_rect.collidepoint(pg.mouse.get_pos()): #Checks if lmb pressed and cursor touching the currently iterating button (If this doesn't work, update pygame)
+                light_sequence[light_index] = '1' #Marks the corresponding index in the light sequence as on
+            if light_sequence[light_index] == '1': #If corresponding index in light sequence is on... (If-statement is neccesary, otherwise button doesn't get highlighted when the corresponding key is pressed instead)
+                pg.draw.rect(screen, c.rgb_red, button_rect.inflate(-2 * c.button_margin, -2 * c.button_margin)) #Highlights button with red if it or it's corresponding key is pressed
+            text[1].center = button_rect.center #Centers text inside button
+            screen.blit(*text) #Blits text (must come after highlight blit, or else text gets covered by it)
+
+        #pg.draw.rect(screen, c.rgb_white, 4 * c.button_margin + 3 * c.button_size, c.button_margin)
 
         pg.display.flip()
 
