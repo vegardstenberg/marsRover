@@ -60,13 +60,7 @@ def loop():
 				roboclaw.BackwardM1(address2, 64)
 				roboclaw.BackwardM2(address2, 64)
 				print("backwards")
-			else:
-				roboclaw.BackwardM1(address1, 0)
-				roboclaw.BackwardM2(address1, 0)
-				roboclaw.BackwardM1(address2, 0)
-				roboclaw.BackwardM2(address2, 0)
-
-			if decoded_data[1] == '1':
+			elif decoded_data[1] == '1':
 				roboclaw.ForwardM1(address1, 64)
 				roboclaw.BackwardM2(address1, 64)
 				roboclaw.ForwardM1(address2, 64)
@@ -79,11 +73,10 @@ def loop():
 				roboclaw.BackwardM1(address2, 64)
 				print("right")
 			else:
-				roboclaw.ForwardM2(address1, 0)
 				roboclaw.BackwardM1(address1, 0)
+				roboclaw.BackwardM2(address1, 0)
 				roboclaw.BackwardM1(address2, 0)
 				roboclaw.BackwardM2(address2, 0)
-				pass
 
 			#for key in enumerate(data):
 			#	GPIO.output(outs[int(key[0])], int(key[1]))
