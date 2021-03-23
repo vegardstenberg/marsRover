@@ -71,7 +71,7 @@ class Button(Texture):
         #on_click: Callable. This callable will be called once when the button is clicked. Anything this callable returns is ignored
         #on_click_args: Tuple, list. Will be passed as *args into on_click
         #on_click_kwargs: Dictionary. Will be passed as **kwargs into on_click
-    def __init__(self, text=None, tx=None, hold_fill=None, anchor='center', on_hold=lambda: None, on_hold_args=(), on_hold_kwargs={}, on_click=lambda: None, on_click_args=(), on_click_kwargs={}, **pos):
+    def __init__(self, text=None, tx=None, hold_fill=None, anchor='center', on_hold=lambda self: None, on_hold_args=(), on_hold_kwargs={}, on_click=lambda self: None, on_click_args=(), on_click_kwargs={}, **pos):
         _rect = pg.Rect(0, 0, 0, 0)
         for k, v in pos.items():
             setattr(_rect, k, v)
@@ -98,10 +98,10 @@ class Button(Texture):
         return _blit
 
 def send_data(bytes_list):
-    if connect_query == 'n': return
     bytes_string = ''.join(bytes_list).encode('utf-8')
     print(bytes_string)
-    inter.sendall(bytes_string)
+    if connect_query == 'y':
+        inter.sendall(bytes_string)
 
 def text_controls():
     print("Text controlls activated")
@@ -150,32 +150,18 @@ def fancy_controls():
     else: joystick.init()
 
     axis_input = [0, 0]
+    light_sequence = ['0', '0', '0', '0']
 
-    '''
-
-    text_buttons = ((
-        light_index, #Which index in the light string the button corresponds to
-        letter, #Which key the button corresponds to
-        c.font_arial.render(letter.upper()), #Tuple consisting of a rendered surface of the button's key, and the rect for that surface
-        pg.draw.rect( #Draws the button
-            screen, #Surface to blit button on
-            c.rgb_white, #Button color
-            (
-                abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin, #Button margin x-axis
-                c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, #Button margin y-axis
-                c.button_size, #button width
-                c.button_size #Button height
-            )
-        )
-    ) for light_index, letter in enumerate('wasd')) #Iterate for the keys "w", "a", "s" and "d"
-
-    '''
+    def button_hold_func(self, seq=None):
+        seq['wasd'.index(self.text.lower())] = '1'
 
     buttons = {
         letter: Button(
             text=letter.upper(),
             tx=c.rgb_white,
             hold_fill=Texture(tx=c.rgb_red, size=(c.button_size - 2 * c.button_margin,) * 2),
+            on_hold=button_hold_func,
+            on_hold_args=(light_sequence,),
             x=abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin, #Button margin x-axis
             y=c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, #Button margin y-axis
             width=c.button_size, #button width
@@ -193,9 +179,10 @@ def fancy_controls():
                 axis_input[event.axis] = event.value if abs(event.value) > 0.2 else 0
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
                 for button in filter(lambda button: button.rect.collidepoint(event.pos), buttons.values()):
-                    button.on_click(*button.on_click_args, **button.on_click_kwargs)
+                    button.on_click(button, *button.on_click_args, **button.on_click_kwargs)
 
-        light_sequence = ['0', '0', '0', '0']
+        for i in range(len(light_sequence)):
+            light_sequence[i] = '0'
 
         if joystick:
             if axis_input[0] < 0:
@@ -216,7 +203,7 @@ def fancy_controls():
         for button in buttons.values():
             button.held = button.rect.collidepoint(mouse_pos) and button_in[0]
             if button.held:
-                button.on_hold(*button.on_click_args, **button.on_click_kwargs)
+                button.on_hold(button, *button.on_hold_args, **button.on_hold_kwargs)
 
         pg.draw.rect(screen, c.rgb_white, rect=(4 * c.button_margin + 3 * c.button_size, c.button_margin, 4 * c.button_margin, 2 * c.button_size + c.button_margin), width=c.button_margin)
 
