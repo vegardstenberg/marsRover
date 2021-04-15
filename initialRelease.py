@@ -53,6 +53,9 @@ class Texture: #Class stolen from some other script I have lol
         self._original_tx = tx.convert_alpha() if type(tx) == pg.Surface else pg.image.load(tx).convert_alpha()
         self.tx = self._original_tx.copy()
 
+    def update_rect(self, anchor='center'):
+        self.rect = self.original_tx.get_rect(**{anchor: getattr(self.rect, anchor)})
+
     def copy(self):
         _copy = self.__class__(topleft=(0, 0))
         _copy.__dict__ = self.__dict__
@@ -97,18 +100,18 @@ class Button(Texture):
             _blit.blit(tx.tx, tx.rect.topleft)
         return _blit
 
-def send_data(bytes_list):
-    bytes_string = ''.join(bytes_list).encode('utf-8')
-    print(bytes_string)
+def send_data(bitlist):
+    bitstring = ''.join(bitlist).encode('utf-8')
+    print(bitstring)
     if connect_query == 'y':
-        inter.sendall(bytes_string)
+        inter.sendall(bitstring)
 
 def text_controls():
     print("Text controlls activated")
 
     while True:
         command = input("Available commands: FORWARD, BACKWARD, LEFT, RIGHT. ").lower().split(" ")
-        light_sequence = ['0', '0', '0', '0']
+        bitlist = ['0', '0', '0', '0']
 
         try:
             dir = command[0]
@@ -117,18 +120,18 @@ def text_controls():
 
             while time.time() < end_time:
                 if dir in ('forward', 'forwards', 'f', 'w'):
-                    light_sequence[0] = '1'
+                    bitlist[0] = '1'
                     print("forward")
                 elif dir in ('backward', 'backwards', 'b', 's'):
-                    light_sequence[2] = '1'
+                    bitlist[2] = '1'
                     print("backward")
                 elif dir in ('right', 'r', 'd'):
-                    light_sequence[3] = '1'
+                    bitlist[3] = '1'
                     print("right")
                 elif dir in ('left', 'l', 'a'):
-                    light_sequence[1] = '1'
+                    bitlist[1] = '1'
                     print("left")
-                send_data(light_sequence)
+                send_data(bitlist)
 
         except KeyboardInterrupt:
             print('Movement aborted')
@@ -150,7 +153,8 @@ def fancy_controls():
     else: joystick.init()
 
     axis_input = [0, 0]
-    light_sequence = ['0', '0', '0', '0']
+    bitlist = ('0 ' * 12).split()
+    speed = 256
 
     def button_hold_func(self, seq=None):
         seq['wasd'.index(self.text.lower())] = '1'
@@ -161,7 +165,7 @@ def fancy_controls():
             tx=c.rgb_white,
             hold_fill=Texture(tx=c.rgb_red, size=(c.button_size - 2 * c.button_margin,) * 2),
             on_hold=button_hold_func,
-            on_hold_args=(light_sequence,),
+            on_hold_args=(bitlist,),
             x=abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin, #Button margin x-axis
             y=c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, #Button margin y-axis
             width=c.button_size, #button width
@@ -181,22 +185,25 @@ def fancy_controls():
                 for button in filter(lambda button: button.rect.collidepoint(event.pos), buttons.values()):
                     button.on_click(button, *button.on_click_args, **button.on_click_kwargs)
 
-        for i in range(len(light_sequence)):
-            light_sequence[i] = '0'
+        for i in range(len(bitlist)):
+            bitlist[i] = '0'
 
         if joystick:
             if axis_input[0] < 0:
-                light_sequence[1] = '1'
+                bitlist[1] = '1'
             elif axis_input[0] > 0:
-                light_sequence[3] = '1'
+                bitlist[3] = '1'
             if axis_input[1] < 0:
-                light_sequence[0] = '1'
+                bitlist[0] = '1'
             elif axis_input[1] > 0:
-                light_sequence[2] = '1'
+                bitlist[2] = '1'
 
         key_in = pg.key.get_pressed()
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
-            if light_sequence[i[0]] != 1: light_sequence[i[0]] = str(key_in[i[1]])
+            if bitlist[i[0]] != 1: bitlist[i[0]] = str(key_in[i[1]])
+
+        for i in ((1, pg.K_UP), (-1, pg.K_DOWN)):
+            if key_in[i[1]] and 0 <= speed + i[0] <= 256: speed += i[0]
 
         button_in = pg.mouse.get_pressed()
         mouse_pos = pg.mouse.get_pos()
@@ -205,13 +212,18 @@ def fancy_controls():
             if button.held:
                 button.on_hold(button, *button.on_hold_args, **button.on_hold_kwargs)
 
-        pg.draw.rect(screen, c.rgb_white, rect=(4 * c.button_margin + 3 * c.button_size, c.button_margin, 4 * c.button_margin, 2 * c.button_size + c.button_margin), width=c.button_margin)
+        pg.draw.rect(screen, c.rgb_white, rect=(4 * c.button_margin + 3 * c.button_size, c.button_margin, 4 * c.button_margin, 2 * c.button_size + c.button_margin))
+        pg.draw.rect(screen, c.rgb_black, rect=(5 * c.button_margin + 3 * c.button_size, 2 * c.button_margin, 2 * c.button_margin, 2 * c.button_size - c.button_margin))
+        gradient = Texture(tx='textures/gradient.png', topleft=(5 * c.button_margin + 3 * c.button_size, 2 * c.button_margin))
+        gradient.original_tx = pg.transform.scale(gradient.original_tx, (2 * c.button_margin, 2 * c.button_size - c.button_margin))
+        gradient.update_rect('topleft')
+        screen.blit(gradient.tx, dest=gradient.rect)
 
         screen.blits(blit_sequence=((button.get_blit(), button.rect.topleft) for button in buttons.values()))
 
         pg.display.flip()
 
-        send_data(light_sequence)
+        send_data(bitlist)
 
 if __name__ == '__main__':
     while True:
