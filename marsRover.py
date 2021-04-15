@@ -39,7 +39,7 @@ def loop():
 
 			data = data[-12:]
 			decoded_data = data.decode('utf-8')
-			speed = int(round(int(data[-8:], 2) + 1 * 0.25))
+			speed = int((round(int(data[-8:], 2) + 1) * 0.25))
 			print(speed)
 
 			print(decoded_data)
