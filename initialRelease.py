@@ -185,7 +185,7 @@ def fancy_controls():
                 for button in filter(lambda button: button.rect.collidepoint(event.pos), buttons.values()):
                     button.on_click(button, *button.on_click_args, **button.on_click_kwargs)
 
-        for i in range(len(bitlist)):
+        for i in range(4):
             bitlist[i] = '0'
 
         if joystick:
