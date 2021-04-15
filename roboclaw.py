@@ -5,7 +5,7 @@ import time
 
 class Roboclaw:
 	'Roboclaw Interface Class'
-	
+
 	def __init__(self, comport, rate, timeout=0.01, retries=3):
 		self.comport = comport
 		self.rate = rate
@@ -105,12 +105,12 @@ class Roboclaw:
 		SETPWMMODE = 148
 		GETPWMMODE = 149
 		FLAGBOOTLOADER = 255
-			
+
 	#Private Functions
 	def crc_clear(self):
 		self._crc = 0
 		return
-		
+
 	def crc_update(self,data):
 		self._crc = self._crc ^ (data << 8)
 		for bit in range(0, 8):
@@ -132,17 +132,17 @@ class Roboclaw:
 		data = self._port.read(2)
 		if len(data)==2:
 			crc = (ord(data[0])<<8) | ord(data[1])
-			return (1,crc)	
+			return (1,crc)
 		return (0,0)
-		
+
 	def _readbyte(self):
 		data = self._port.read(1)
 		if len(data):
 			val = ord(data)
 			self.crc_update(val)
-			return (1,val)	
+			return (1,val)
 		return (0,0)
-		
+
 	def _readword(self):
 		val1 = self._readbyte()
 		if val1[0]:
@@ -161,7 +161,7 @@ class Roboclaw:
 					val4 = self._readbyte()
 					if val4[0]:
 						return (1,val1[1]<<24|val2[1]<<16|val3[1]<<8|val4[1])
-		return (0,0)	
+		return (0,0)
 
 	def _readslong(self):
 		val = self._readlong()
@@ -181,7 +181,7 @@ class Roboclaw:
 	def _writeword(self,val):
 		self._writebyte((val>>8)&0xFF)
 		self._writebyte(val&0xFF)
-		
+
 	def _writesword(self,val):
 		self._writeword(val)
 
@@ -849,7 +849,7 @@ class Roboclaw:
 
 	def DutyAccelM1M2(self,address,accel1,duty1,accel2,duty2):
 		return self._writeS24S24(self.Cmd.MIXEDDUTYACCEL,duty1,accel1,duty2,accel2)
-		
+
 	def ReadM1VelocityPID(self,address):
 		data = self._read_n(address,self.Cmd.READM1PID,4)
 		if data[0]:
@@ -870,10 +870,10 @@ class Roboclaw:
 
 	def SetMainVoltages(self,address,min, max):
 		return self._write22(address,self.Cmd.SETMAINVOLTAGES,min,max)
-		
+
 	def SetLogicVoltages(self,address,min, max):
 		return self._write22(address,self.Cmd.SETLOGICVOLTAGES,min,max)
-		
+
 	def ReadMinMaxMainVoltages(self,address):
 		val = self._read4(address,self.Cmd.GETMINMAXMAINVOLTAGES)
 		if val[0]:
@@ -904,7 +904,7 @@ class Roboclaw:
 			data[3]/=1024.0
 			return data
 		return (0,0,0,0,0,0,0,0)
-		
+
 	def ReadM2PositionPID(self,address):
 		data = self._read_n(address,self.Cmd.READM2POSPID,7)
 		if data[0]:
@@ -960,7 +960,7 @@ class Roboclaw:
 		if val[0]:
 			return (1,val[1]>>8,val[1]&0xFF)
 		return (0,0,0)
-		
+
 	#Warning(TTL Serial): Baudrate will change if not already set to 38400.  Communications will be lost
 	def RestoreDefaults(self,address):
 		return self._write0(address,self.Cmd.RESTOREDEFAULTS)
@@ -979,7 +979,7 @@ class Roboclaw:
 		if val[0]:
 			return (1,val[1]>>8,val[1]&0xFF)
 		return (0,0,0)
-		
+
 	def SetM1EncoderMode(self,address,mode):
 		return self._write1(address,self.Cmd.SETM1ENCODERMODE,mode)
 
@@ -1033,4 +1033,3 @@ class Roboclaw:
 		except:
 			return 0
 		return 1
-
