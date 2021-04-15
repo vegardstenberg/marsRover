@@ -202,8 +202,11 @@ def fancy_controls():
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
             if bitlist[i[0]] != 1: bitlist[i[0]] = str(key_in[i[1]])
 
-        for i in ((1, pg.K_UP), (-1, pg.K_DOWN)):
+        for i in ((2, pg.K_UP), (-2, pg.K_DOWN)):
             if key_in[i[1]] and 0 <= speed + i[0] <= 256: speed += i[0]
+            binaryspeed = '{0:08b}'.format(speed - 1)
+            for i in range(8):
+                bitlist[4 + i] = binaryspeed[i]
 
         button_in = pg.mouse.get_pressed()
         mouse_pos = pg.mouse.get_pos()
@@ -217,7 +220,10 @@ def fancy_controls():
         gradient = Texture(tx='textures/gradient.png', topleft=(5 * c.button_margin + 3 * c.button_size, 2 * c.button_margin))
         gradient.original_tx = pg.transform.scale(gradient.original_tx, (2 * c.button_margin, 2 * c.button_size - c.button_margin))
         gradient.update_rect('topleft')
-        screen.blit(gradient.tx, dest=gradient.rect)
+        gradient_blit_rect = gradient.rect.copy()
+        gradient_blit_rect.h = gradient.rect.h * speed / 256
+        gradient_blit_rect.bottom = gradient.rect.bottom
+        screen.blit(gradient.tx, dest=gradient_blit_rect, area=(0, gradient.rect.h - gradient_blit_rect.h, *gradient_blit_rect.size))
 
         screen.blits(blit_sequence=((button.get_blit(), button.rect.topleft) for button in buttons.values()))
 
