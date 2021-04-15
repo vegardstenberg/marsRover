@@ -153,7 +153,7 @@ def fancy_controls():
     else: joystick.init()
 
     axis_input = [0, 0]
-    bitlist = ('0 ' * 12).split()
+    bitlist = ('0 ' * 4).split() + ('1 ' * 8).split()
     speed = 256
 
     def button_hold_func(self, seq=None):
