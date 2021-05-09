@@ -58,7 +58,7 @@ class Texture: #Class stolen from some other script I have lol
 
     def copy(self):
         _copy = self.__class__(topleft=(0, 0))
-        _copy.__dict__ = self.__dict__
+        _copy.__dict__ = {k: v.copy() if hasattr(v, 'copy') else v for k, v in self.__dict__.items()}
         return _copy
 
 class Button(Texture):
@@ -74,7 +74,7 @@ class Button(Texture):
         #on_click: Callable. This callable will be called once when the button is clicked. Anything this callable returns is ignored
         #on_click_args: Tuple, list. Will be passed as *args into on_click
         #on_click_kwargs: Dictionary. Will be passed as **kwargs into on_click
-    def __init__(self, text=None, tx=None, hold_fill=None, anchor='center', on_hold=lambda self: None, on_hold_args=(), on_hold_kwargs={}, on_click=lambda self: None, on_click_args=(), on_click_kwargs={}, **pos):
+    def __init__(self, text=None, tx=None, hold_fill=None, anchor='center', on_hold=lambda self: None, on_hold_args=(), on_hold_kwargs={}, on_click=lambda self: None, on_click_args=(), on_click_kwargs={}, visible=True, **pos):
         _rect = pg.Rect(0, 0, 0, 0)
         for k, v in pos.items():
             setattr(_rect, k, v)
@@ -92,12 +92,93 @@ class Button(Texture):
         self.on_click_args = on_click_args
         self.on_click_kwargs = on_click_kwargs
         self.held = False
+        self.visible = visible
+
+    def copy(self):
+        _copy = self.__class__()
+        _copy.__dict__ = {k: v.copy() if hasattr(v, 'copy') else v for k, v in self.__dict__.items()}
+        return _copy
 
     def get_blit(self): #Put together a blittable button and return it
         _blit = self.tx.copy()
         for tx in filter(lambda tx: bool(tx), (self.hold_fill, self.text_rendered)):
             if tx == self.hold_fill and not self.held: continue
             _blit.blit(tx.tx, tx.rect.topleft)
+        return _blit
+
+class Slider(Texture):
+    def __init__(self, valrange, default_value, increment, poskeys, negkeys, border=c.b_marg, border_color=(255, 255, 255), bg_color=(0, 0, 0), slider_tx={'tx': 'textures/gradient.png'}, horizontal=False, reverse=False, size_includes_border=False, visible=True, **pos):
+        if valrange[1] - valrange[0] < 0:
+            reverse = not reverse
+            valrange = tuple(reversed(valrange))
+        if size_includes_border:
+            border_tx = Texture(tx=border_color, **pos)
+            bg_tx = Texture(tx=bg_color, rect=border_tx.rect.inflate(*(border * -2,) * 2))
+        else:
+            bg_tx = Texture(tx=bg_color, **pos)
+            border_tx = Texture(tx=border_color, rect=bg_tx.rect.inflate(*(border * 2) * 2))
+        border_tx.original_tx.blit(bg_tx.tx, (border,) * 2)
+        border_tx.tx = border_tx.original_tx
+        super().__init__(tx=border_tx.tx, rect=border_tx.rect)
+        self.valrange = valrange
+        self.value = default_value
+        self.increment = increment
+        self.horizontal = horizontal
+        self.reverse = reverse
+        self.keys = {k: v if type(v) in (list, tuple) else (v,) for k, v in (('pos', poskeys), ('neg', negkeys))}
+        self.visible = visible
+
+        self.slider = Texture(**slider_tx, topright=(self.rect.w - border, border))
+        if horizontal: self.slider.original_tx = pg.transform.rotate(self.slider.original_tx, -90)
+        self.reverse_slider = self.slider.copy()
+        flipped_slider = getattr(self, 'slider' if reverse else 'reverse_slider')
+        flipped_slider.original_tx = pg.transform.flip(flipped_slider.original_tx, horizontal, not horizontal)
+        flipped_slider.rect.bottomleft = (border, self.rect.h - border)
+        if max(valrange) - min(valrange) != 0:
+            length_scale_pos = len(range(min(valrange) if min(valrange) > 0 else 0, max(valrange))) / (max(valrange) - min(valrange))
+            length_scale_neg = len(range(min(valrange), max(valrange) if max(valrange) < 0 else 0)) / (max(valrange) - min(valrange))
+        else: length_scale_pos = length_scale_neg = 0
+        if horizontal:
+            self.slider.original_tx = pg.transform.scale(self.slider.original_tx, (round(bg_tx.rect.w * length_scale_pos), bg_tx.rect.h))
+            self.reverse_slider.original_tx = pg.transform.scale(self.reverse_slider.original_tx, (round(bg_tx.rect.w * length_scale_neg), bg_tx.rect.h))
+        else:
+            self.slider.original_tx = pg.transform.scale(self.slider.original_tx, (bg_tx.rect.w, round(bg_tx.rect.h * length_scale_pos)))
+            self.reverse_slider.original_tx = pg.transform.scale(self.reverse_slider.original_tx, (bg_tx.rect.w, round(bg_tx.rect.h * length_scale_neg)))
+        self.slider.update_rect(anchor='bottomleft' if reverse else 'topright')
+        self.reverse_slider.update_rect(anchor='topright' if reverse else 'bottomleft')
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, newval):
+        if newval < self.valrange[0]: self._value = self.valrange[0]
+        elif newval > self.valrange[1]: self._value = self.valrange[1]
+        else: self._value = newval
+
+    def copy(self):
+        _copy = self.__class__(valrange=(0, 0), default_value=0, increment=0, poskeys=(), negkeys=())
+        _copy.__dict__ = {k: v.copy() if hasattr(v, 'copy') else v for k, v in self.__dict__.items()}
+        return _copy
+
+    def get_blit(self):
+        _blit = self.tx.copy()
+        if self.value != 0:
+            if self.value > 0:
+                slider = self.slider
+                length = self.value / (max(self.valrange) - min(self.valrange) if min(self.valrange) > 0 else max(self.valrange))
+            else:
+                slider = self.reverse_slider
+                length = self.value / (min(self.valrange) + max(self.valrange) if max(self.valrange) < 0 else min(self.valrange))
+            if self.horizontal:
+                length = round(slider.rect.w * length)
+                if (self.value > 0) is self.reverse: _blit.blit(slider.tx, (slider.rect.left + (slider.rect.w - length), slider.rect.top), area=(slider.rect.w - length, 0, length, slider.rect.h))
+                else: _blit.blit(slider.tx, slider.rect.topleft, area=(0, 0, length, slider.rect.h))
+            else:
+                length = round(slider.rect.h * length)
+                if (self.value > 0) is self.reverse: _blit.blit(slider.tx, slider.rect.topleft, area=(0, 0, slider.rect.w, length))
+                else: _blit.blit(slider.tx, (slider.rect.left, slider.rect.top + (slider.rect.h - length)), area=(0, slider.rect.h - length, slider.rect.w, length))
         return _blit
 
 def send_data(bitlist):
@@ -147,31 +228,67 @@ def fancy_controls():
 
     pg.init()
     clk = pg.time.Clock()
-    screen = pg.display.set_mode(c.pg_screen_res, pg.RESIZABLE)
+    screen = pg.display.set_mode(c.pg_res, pg.RESIZABLE)
     try: joystick = pg.joystick.Joystick(0)
     except pg.error: joystick = None
     else: joystick.init()
 
     axis_input = [0, 0]
-    bitlist = ('0 ' * 4).split() + ('1 ' * 8).split()
+    bitlist = ('0 ' * 4).split() + ('1 ' * 16).split()
     speed = 256
 
-    def button_hold_func(self, seq=None):
+    def button_hold_func(self, seq):
         seq['wasd'.index(self.text.lower())] = '1'
 
     buttons = {
         letter: Button(
             text=letter.upper(),
             tx=c.rgb_white,
-            hold_fill=Texture(tx=c.rgb_red, size=(c.button_size - 2 * c.button_margin,) * 2),
+            hold_fill=Texture(tx=c.rgb_red, size=(c.b_size - 2 * c.b_marg,) * 2),
             on_hold=button_hold_func,
             on_hold_args=(bitlist,),
-            x=abs(-(c.button_margin + c.button_size) + light_index * (c.button_margin + c.button_size)) + c.button_margin, #Button margin x-axis
-            y=c.button_margin if light_index == 0 else 2 * c.button_margin + c.button_size, #Button margin y-axis
-            width=c.button_size, #button width
-            height=c.button_size #Button height
+            x=abs(-(c.b_marg + c.b_size) + light_index * (c.b_marg + c.b_size)) + c.b_marg, #Button margin x-axis
+            y=c.b_marg if light_index == 0 else 2 * c.b_marg + c.b_size, #Button margin y-axis
+            width=c.b_size, #button width
+            height=c.b_size #Button height
         )
     for light_index, letter in enumerate('wasd')}
+
+    sliders = {
+        'speed': Slider(
+            valrange=(0, 255),
+            default_value=255,
+            increment=2,
+            poskeys=pg.K_UP,
+            negkeys=pg.K_DOWN,
+            size_includes_border=True,
+            size=(c.b_size, c.pg_res[1] - c.b_size - 3 * c.b_marg),
+            topright=(c.pg_res[0] - c.b_marg, c.b_marg)
+        ),
+        'keyboard_steering': Slider(
+            valrange=(0, 255),
+            default_value=255,
+            increment=2,
+            poskeys=pg.K_RIGHT,
+            negkeys=pg.K_LEFT,
+            horizontal=True,
+            size_includes_border=True,
+            size=(c.pg_res[0] - c.b_size - 3 * c.b_marg, c.b_size),
+            bottomleft=(c.b_marg, c.pg_res[1] - c.b_marg),
+        ),
+        'controller_steering': Slider(
+            valrange=(-128, 128),
+            default_value=0,
+            increment=2,
+            poskeys=pg.K_RIGHT,
+            negkeys=pg.K_LEFT,
+            horizontal=True,
+            size_includes_border=True,
+            size=(c.pg_res[0] - c.b_size - 3 * c.b_marg, c.b_size),
+            bottomleft=(c.b_marg, c.pg_res[1] - c.b_marg),
+            visible=False
+        )
+    }
 
     while True:
         clk.tick(30)
@@ -199,6 +316,11 @@ def fancy_controls():
                 bitlist[2] = '1'
 
         key_in = pg.key.get_pressed()
+
+        for slider in filter(lambda s: s.visible, sliders.values()):
+            if any(key_in[key] for key in slider.keys['pos']): slider.value += slider.increment
+            elif any(key_in[key] for key in slider.keys['neg']): slider.value -= slider.increment
+
         for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
             if bitlist[i[0]] != 1: bitlist[i[0]] = str(key_in[i[1]])
 
@@ -208,6 +330,14 @@ def fancy_controls():
             for i in range(8):
                 bitlist[4 + i] = binaryspeed[i]
 
+        binaryspeed = '{0:08b}'.format(sliders['speed'].value)
+        for i in range(8):
+            bitlist[4 + i] = binaryspeed[i]
+
+        binarysteering = '{0:08b}'.format(sliders['keyboard_steering'].value)
+        for i in range(8):
+            bitlist[12 + i] = binarysteering[i]
+
         button_in = pg.mouse.get_pressed()
         mouse_pos = pg.mouse.get_pos()
         for button in buttons.values():
@@ -215,17 +345,10 @@ def fancy_controls():
             if button.held:
                 button.on_hold(button, *button.on_hold_args, **button.on_hold_kwargs)
 
-        pg.draw.rect(screen, c.rgb_white, rect=(4 * c.button_margin + 3 * c.button_size, c.button_margin, 4 * c.button_margin, 2 * c.button_size + c.button_margin))
-        pg.draw.rect(screen, c.rgb_black, rect=(5 * c.button_margin + 3 * c.button_size, 2 * c.button_margin, 2 * c.button_margin, 2 * c.button_size - c.button_margin))
-        gradient = Texture(tx='textures/gradient.png', topleft=(5 * c.button_margin + 3 * c.button_size, 2 * c.button_margin))
-        gradient.original_tx = pg.transform.scale(gradient.original_tx, (2 * c.button_margin, 2 * c.button_size - c.button_margin))
-        gradient.update_rect('topleft')
-        gradient_blit_rect = gradient.rect.copy()
-        gradient_blit_rect.h = gradient.rect.h * speed / 256
-        gradient_blit_rect.bottom = gradient.rect.bottom
-        screen.blit(gradient.tx, dest=gradient_blit_rect, area=(0, gradient.rect.h - gradient_blit_rect.h, *gradient_blit_rect.size))
-
-        screen.blits(blit_sequence=((button.get_blit(), button.rect.topleft) for button in buttons.values()))
+        screen.blits(blit_sequence=(
+            *((button.get_blit(), button.rect.topleft) for button in filter(lambda b: b.visible, buttons.values())),
+            *((slider.get_blit(), slider.rect.topleft) for slider in filter(lambda s: s.visible, sliders.values())),
+        ))
 
         pg.display.flip()
 
@@ -233,13 +356,20 @@ def fancy_controls():
 
 if __name__ == '__main__':
     while True:
-        connect_query = input('Want to connect to the rover? (y/n): ').lower()
+        connect_query = input('Want to connect to the rover? (y/n): ').lower().split()
+        if len(connect_query) == 1:
+            ip = c.pi_ip
+            connect_query = connect_query[0]
+        elif len(connect_query) == 2:
+            ip = connect_query[1]
+            connect_query = connect_query[0]
+        else: connect_query = ''
         if connect_query in ('y', 'yes'):
             connect_query = 'y'
             print("Trying to establish a connection with the rover...")
             try:
                 inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                inter.connect((c.pi_ip, 8080))
+                inter.connect((ip, 8080))
             except:
                 print('Could not connect to the rover. Continuing without connection...')
                 connect_query = 'n'

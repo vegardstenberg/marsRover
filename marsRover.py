@@ -3,8 +3,9 @@ import time
 import socket
 from roboclaw import Roboclaw
 import constants as c
+socket.setdefaulttimeout(10)
 
-def setup():
+def setup(ip=c.pi_ip):
 	global inter
 	global address1
 	global address2
@@ -13,7 +14,7 @@ def setup():
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-	inter.bind((c.pi_ip, 8080))
+	inter.bind((ip, 8080))
 	inter.listen(5)
 
 	address1 = 0x80 #front motors
@@ -23,75 +24,88 @@ def setup():
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
-	print("Setting up")
-
-def loop():
+def loop(local_testing=False):
 	global connection
-
-	print("Running")
-
 	while True:
-		connection = inter.accept()[0]
+		try: connection = inter.accept()[0]
+		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
+		else: break
+	while True:
+		data = connection.recv(4096)
+		if not data: break
 
-		while True:
-			data = connection.recv(4096)
-			if not data: break
+		data = data[-20:]
+		decoded_data = data.decode('utf-8')
+		speed = int(data[4:12], 2) // 2
+		steering = int(data[12:20], 2)
+		print(f'Speed: {speed} | Steering: {steering} | Raw decoded data: {decoded_data}')
 
-			data = data[-12:]
-			decoded_data = data.decode('utf-8')
-			speed = int((round(int(data[-8:], 2) + 1) * 0.5))
-			print(speed)
-
-			print(decoded_data)
-
-			if decoded_data[0] == '1':
-				roboclaw.ForwardM1(address1, speed)
-				roboclaw.ForwardM2(address1, speed)
-				roboclaw.ForwardM1(address2, speed)
-				roboclaw.ForwardM2(address2, speed)
-				roboclaw.ForwardM1(address3, speed)
-				roboclaw.ForwardM2(address3, speed)
-				print("forward")
-			elif decoded_data[2] == '1':
-				roboclaw.BackwardM1(address1, speed)
-				roboclaw.BackwardM2(address1, speed)
-				roboclaw.BackwardM1(address2, speed)
-				roboclaw.BackwardM2(address2, speed)
-				roboclaw.BackwardM1(address3, speed)
-				roboclaw.BackwardM2(address3, speed)
-				print("backwards")
-			elif decoded_data[1] == '1':
-				roboclaw.ForwardM1(address1, speed)
-				roboclaw.BackwardM2(address1, speed)
-				roboclaw.ForwardM1(address2, speed)
-				roboclaw.BackwardM2(address2, speed)
-				roboclaw.ForwardM1(address3, speed)
-				roboclaw.BackwardM2(address3, speed)
-				print("left")
-			elif decoded_data[3] == '1':
-				roboclaw.ForwardM2(address1, speed)
-				roboclaw.BackwardM1(address1, speed)
-				roboclaw.ForwardM2(address2, speed)
-				roboclaw.BackwardM1(address2, speed)
-				roboclaw.ForwardM2(address3, speed)
-				roboclaw.BackwardM1(address3, speed)
-				print("right")
-			else:
-				roboclaw.BackwardM1(address1, 0)
-				roboclaw.BackwardM2(address1, 0)
-				roboclaw.BackwardM1(address2, 0)
-				roboclaw.BackwardM2(address2, 0)
-				roboclaw.BackwardM1(address3, 0)
-				roboclaw.BackwardM2(address3, 0)
+		if local_testing: continue
+		if decoded_data[0] == '1':
+			roboclaw.ForwardM1(address1, speed)
+			roboclaw.ForwardM2(address1, speed)
+			roboclaw.ForwardM1(address2, speed)
+			roboclaw.ForwardM2(address2, speed)
+			roboclaw.ForwardM1(address3, speed)
+			roboclaw.ForwardM2(address3, speed)
+			print("forward")
+		elif decoded_data[2] == '1':
+			roboclaw.BackwardM1(address1, speed)
+			roboclaw.BackwardM2(address1, speed)
+			roboclaw.BackwardM1(address2, speed)
+			roboclaw.BackwardM2(address2, speed)
+			roboclaw.BackwardM1(address3, speed)
+			roboclaw.BackwardM2(address3, speed)
+			print("backwards")
+		elif decoded_data[1] == '1':
+			roboclaw.ForwardM1(address1, speed)
+			roboclaw.BackwardM2(address1, speed)
+			roboclaw.ForwardM1(address2, speed)
+			roboclaw.BackwardM2(address2, speed)
+			roboclaw.ForwardM1(address3, speed)
+			roboclaw.BackwardM2(address3, speed)
+			print("left")
+		elif decoded_data[3] == '1':
+			roboclaw.ForwardM2(address1, speed)
+			roboclaw.BackwardM1(address1, speed)
+			roboclaw.ForwardM2(address2, speed)
+			roboclaw.BackwardM1(address2, speed)
+			roboclaw.ForwardM2(address3, speed)
+			roboclaw.BackwardM1(address3, speed)
+			print("right")
+		else:
+			roboclaw.BackwardM1(address1, 0)
+			roboclaw.BackwardM2(address1, 0)
+			roboclaw.BackwardM1(address2, 0)
+			roboclaw.BackwardM2(address2, 0)
+			roboclaw.BackwardM1(address3, 0)
+			roboclaw.BackwardM2(address3, 0)
 
 def stop():
-	connection.close()
-
 	print("Stopping")
+	if 'connecton' in globals().keys(): connection.close()
 
 if __name__ == '__main__':
-	setup()
+	local_testing = False
 	try:
-		loop()
-	except KeyboardInterrupt:
-		stop()
+		setup()
+		print('Setup completed with default ip')
+	except:
+		retry_query = input('Setup failed. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n  3. Exit\nResponse: ')
+		while True:
+			if retry_query.isdigit() and 1 <= int(retry_query) <= 3:
+				retry_query = int(retry_query)
+				break
+			retry_query = input('Invalid response. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n  3. Exit\nResponse: ')
+		if retry_query == 1:
+			new_ip = input('Enter new ip address: ')
+			setup(ip=new_ip)
+			print(f'Setup completed with ip "{new_ip}"')
+		elif retry_query == 2:
+			setup(ip='localhost')
+			local_testing = True
+			print('Setup completed in local test environment. Running without motors')
+		else: exit()
+	print("Running")
+	try: loop(local_testing)
+	except KeyboardInterrupt: stop()
