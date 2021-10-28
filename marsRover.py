@@ -3,6 +3,8 @@ import time
 import socket
 from roboclaw import Roboclaw
 import constants as c
+from fastnumbers import isfloat
+from datetime import datetime as dt, timedelta as td
 socket.setdefaulttimeout(10)
 
 def setup(ip=c.pi_ip):
@@ -24,6 +26,58 @@ def setup(ip=c.pi_ip):
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
+def drive(speed):
+	roboclaw.ForwardM1(address1, speed)
+	roboclaw.ForwardM2(address1, speed)
+	roboclaw.ForwardM1(address2, speed)
+	roboclaw.ForwardM2(address2, speed)
+	roboclaw.ForwardM1(address3, speed)
+	roboclaw.ForwardM2(address3, speed)
+	print('drive')
+
+def reverse(speed):
+	roboclaw.BackwardM1(address1, speed)
+	roboclaw.BackwardM2(address1, speed)
+	roboclaw.BackwardM1(address2, speed)
+	roboclaw.BackwardM2(address2, speed)
+	roboclaw.BackwardM1(address3, speed)
+	roboclaw.BackwardM2(address3, speed)
+	print('reverse')
+
+def turn_left(speed):
+	roboclaw.ForwardM1(address1, speed)
+	roboclaw.BackwardM2(address1, speed)
+	roboclaw.ForwardM1(address2, speed)
+	roboclaw.BackwardM2(address2, speed)
+	roboclaw.ForwardM1(address3, speed)
+	roboclaw.BackwardM2(address3, speed)
+	print('turn left')
+
+def turn_right(speed):
+	roboclaw.ForwardM2(address1, speed)
+	roboclaw.BackwardM1(address1, speed)
+	roboclaw.ForwardM2(address2, speed)
+	roboclaw.BackwardM1(address2, speed)
+	roboclaw.ForwardM2(address3, speed)
+	roboclaw.BackwardM1(address3, speed)
+	print('turn right')
+
+def stop():
+	roboclaw.BackwardM1(address1, 0)
+	roboclaw.BackwardM2(address1, 0)
+	roboclaw.BackwardM1(address2, 0)
+	roboclaw.BackwardM2(address2, 0)
+	roboclaw.BackwardM1(address3, 0)
+	roboclaw.BackwardM2(address3, 0)
+	print('stop')
+
+future_commands = {}
+txt_speed = 128
+txt_turn = 0
+args = {
+	'drive': ('txt_speed',)
+}
+
 def loop(local_testing=False):
 	global connection
 	while True:
@@ -31,55 +85,30 @@ def loop(local_testing=False):
 		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
 		else: break
 	while True:
-		data = connection.recv(4096)
-		if not data: break
-
-		data = data[-20:]
-		decoded_data = data.decode('utf-8')
-		speed = int(data[4:12], 2) // 2
-		steering = int(data[12:20], 2)
-		print(f'Speed: {speed} | Steering: {steering} | Raw decoded data: {decoded_data}')
+		try: data = connection.recv(4096)
+		except socket.timeout: data = b'&1'
+		data = data.decode('utf-8').split('&')[-1]
+		text_controls = data[0]
+		data = data[1:]
+		now = dt.now()
+		#execute_commands
+		for command in (data.split('|') + [cmd for time, cmd in future_commands.items() if now > time]):
+			print(f'Executing command: {command}')
+			command = command.split(' ')
+			if command[0] != 'stop': future_commands[now + td(seconds=int(command[1]))] = 'stop'
+			if not local_testing: globals()[command[0]](*(globals()[arg_name] for arg_name in args[command[0]]))
+		if text_controls: continue
+		else:
+			speed = int(data[4:12], 2) // 2
+			steering = int(data[12:20], 2)
+			print(f'Speed: {speed} | Steering: {steering} | Raw decoded data: {data}')
 
 		if local_testing: continue
-		if decoded_data[0] == '1':
-			roboclaw.ForwardM1(address1, speed)
-			roboclaw.ForwardM2(address1, speed)
-			roboclaw.ForwardM1(address2, speed)
-			roboclaw.ForwardM2(address2, speed)
-			roboclaw.ForwardM1(address3, speed)
-			roboclaw.ForwardM2(address3, speed)
-			print("forward")
-		elif decoded_data[2] == '1':
-			roboclaw.BackwardM1(address1, speed)
-			roboclaw.BackwardM2(address1, speed)
-			roboclaw.BackwardM1(address2, speed)
-			roboclaw.BackwardM2(address2, speed)
-			roboclaw.BackwardM1(address3, speed)
-			roboclaw.BackwardM2(address3, speed)
-			print("backwards")
-		elif decoded_data[1] == '1':
-			roboclaw.ForwardM1(address1, speed)
-			roboclaw.BackwardM2(address1, speed)
-			roboclaw.ForwardM1(address2, speed)
-			roboclaw.BackwardM2(address2, speed)
-			roboclaw.ForwardM1(address3, speed)
-			roboclaw.BackwardM2(address3, speed)
-			print("left")
-		elif decoded_data[3] == '1':
-			roboclaw.ForwardM2(address1, speed)
-			roboclaw.BackwardM1(address1, speed)
-			roboclaw.ForwardM2(address2, speed)
-			roboclaw.BackwardM1(address2, speed)
-			roboclaw.ForwardM2(address3, speed)
-			roboclaw.BackwardM1(address3, speed)
-			print("right")
-		else:
-			roboclaw.BackwardM1(address1, 0)
-			roboclaw.BackwardM2(address1, 0)
-			roboclaw.BackwardM1(address2, 0)
-			roboclaw.BackwardM2(address2, 0)
-			roboclaw.BackwardM1(address3, 0)
-			roboclaw.BackwardM2(address3, 0)
+		if data[0] == '1': drive(speed)
+		elif data[2] == '1': reverse(speed)
+		elif data[1] == '1': turn_left(speed)
+		elif data[3] == '1': turn_right(speed)
+		else: stop()
 
 def stop():
 	print("Stopping")

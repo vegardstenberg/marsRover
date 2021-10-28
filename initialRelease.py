@@ -67,6 +67,7 @@ class Button(Texture):
         #text (option 2): image path, pygame surface, rgb color, Texture object. This text will only be stored as a surface (seld.text_rendered)
         #tx: image path, pygame surface, rgb color, Texture object. Anything accepted as tx in the Texture class is also accepted here
         #hold_fill: image path, pygame surface, rgb color, Texture object. Same as tx
+        #key: key attribute of pygame. The key associated with the button
         #anchor: The point to align all blittable parts of the button to. Should be a string representing a point on a rectangle
         #on_hold: Callable. This callable will be called every frame the button is held. Anything this callable returns is ignored
         #on_hold_args: Tuple, list. Will be passed as *args into on_hold
@@ -74,7 +75,7 @@ class Button(Texture):
         #on_click: Callable. This callable will be called once when the button is clicked. Anything this callable returns is ignored
         #on_click_args: Tuple, list. Will be passed as *args into on_click
         #on_click_kwargs: Dictionary. Will be passed as **kwargs into on_click
-    def __init__(self, text=None, tx=None, hold_fill=None, anchor='center', on_hold=lambda self: None, on_hold_args=(), on_hold_kwargs={}, on_click=lambda self: None, on_click_args=(), on_click_kwargs={}, visible=True, **pos):
+    def __init__(self, text=None, tx=None, hold_fill=None, key=None, anchor='center', on_hold=lambda self: None, on_hold_args=(), on_hold_kwargs={}, on_click=lambda self: None, on_click_args=(), on_click_kwargs={}, visible=True, **pos):
         _rect = pg.Rect(0, 0, 0, 0)
         for k, v in pos.items():
             setattr(_rect, k, v)
@@ -85,6 +86,7 @@ class Button(Texture):
         self.text = str(text) if type(text) in (str, int, float) else None
         self.text_rendered = Texture(tx=c.font_arial.render(self.text)[0] if self.text else text, **anchor) if text else None
         self.hold_fill = Texture(tx=hold_fill, **anchor) if hold_fill else None
+        self.key = getattr(pg, f'K_{key}')
         self.on_hold = on_hold
         self.on_hold_args = on_hold_args
         self.on_hold_kwargs = on_hold_kwargs
@@ -181,47 +183,20 @@ class Slider(Texture):
                 else: _blit.blit(slider.tx, (slider.rect.left, slider.rect.top + (slider.rect.h - length)), area=(0, slider.rect.h - length, slider.rect.w, length))
         return _blit
 
-def send_data(bitlist):
-    bitstring = ''.join(bitlist).encode('utf-8')
+def send_data(bitlist, is_string=False):
+    if not is_string: bitstring = ''.join(bitlist)
     print(bitstring)
+    bitstring = f'&{bitstring}'.encode('utf-8')
     if connect_query == 'y':
         inter.sendall(bitstring)
 
 def text_controls():
-    print("Text controlls activated")
-
+    print('Text controlls activated')
+    command_list = ('help', 'drive', 'reverse', 'turn', 'set_speed', 'get_speed', 'set_turn', 'get_turn', 'stop')
     while True:
-        command = input("Available commands: FORWARD, BACKWARD, LEFT, RIGHT. ").lower().split(" ")
-        bitlist = ['0', '0', '0', '0']
-
-        try:
-            dir = command[0]
-            val = int(command[1])
-            end_time = time.time() + val
-
-            while time.time() < end_time:
-                if dir in ('forward', 'forwards', 'f', 'w'):
-                    bitlist[0] = '1'
-                    print("forward")
-                elif dir in ('backward', 'backwards', 'b', 's'):
-                    bitlist[2] = '1'
-                    print("backward")
-                elif dir in ('right', 'r', 'd'):
-                    bitlist[3] = '1'
-                    print("right")
-                elif dir in ('left', 'l', 'a'):
-                    bitlist[1] = '1'
-                    print("left")
-                send_data(bitlist)
-
-        except KeyboardInterrupt:
-            print('Movement aborted')
-
-        except:
-            print("Invalid format, please try again.")
-
-def WASD_controlls():
-    print("WASD controlls activated.")
+        print('Available commands: HELP, FORWARD, BACKWARD, LEFT, RIGHT')
+        commands = input('Enter a command (to enter multiple, use \'|\'):  ').lower()
+        send_data(f'1{commands}')
 
 def fancy_controls():
     print("Fancy controlls activated.")
@@ -234,17 +209,18 @@ def fancy_controls():
     else: joystick.init()
 
     axis_input = [0, 0]
-    bitlist = ('0 ' * 4).split() + ('1 ' * 16).split()
+    bitlist = ['0',] + ('0 ' * 4).split() + ('1 ' * 16).split()
     speed = 256
 
     def button_hold_func(self, seq):
-        seq['wasd'.index(self.text.lower())] = '1'
+        seq['wasd'.index(self.text.lower()) + 1] = '1'
 
     buttons = {
         letter: Button(
             text=letter.upper(),
             tx=c.rgb_white,
             hold_fill=Texture(tx=c.rgb_red, size=(c.b_size - 2 * c.b_marg,) * 2),
+            key=letter,
             on_hold=button_hold_func,
             on_hold_args=(bitlist,),
             x=abs(-(c.b_marg + c.b_size) + light_index * (c.b_marg + c.b_size)) + c.b_marg, #Button margin x-axis
@@ -302,18 +278,18 @@ def fancy_controls():
                 for button in filter(lambda button: button.rect.collidepoint(event.pos), buttons.values()):
                     button.on_click(button, *button.on_click_args, **button.on_click_kwargs)
 
-        for i in range(4):
+        for i in range(1, 5):
             bitlist[i] = '0'
 
         if joystick:
             if axis_input[0] < 0:
-                bitlist[1] = '1'
-            elif axis_input[0] > 0:
-                bitlist[3] = '1'
-            if axis_input[1] < 0:
-                bitlist[0] = '1'
-            elif axis_input[1] > 0:
                 bitlist[2] = '1'
+            elif axis_input[0] > 0:
+                bitlist[4] = '1'
+            if axis_input[1] < 0:
+                bitlist[1] = '1'
+            elif axis_input[1] > 0:
+                bitlist[3] = '1'
 
         key_in = pg.key.get_pressed()
 
@@ -321,27 +297,24 @@ def fancy_controls():
             if any(key_in[key] for key in slider.keys['pos']): slider.value += slider.increment
             elif any(key_in[key] for key in slider.keys['neg']): slider.value -= slider.increment
 
-        for i in enumerate([pg.K_w, pg.K_a, pg.K_s, pg.K_d]):
-            if bitlist[i[0]] != 1: bitlist[i[0]] = str(key_in[i[1]])
-
         for i in ((2, pg.K_UP), (-2, pg.K_DOWN)):
             if key_in[i[1]] and 0 <= speed + i[0] <= 256: speed += i[0]
             binaryspeed = '{0:08b}'.format(speed - 1)
             for i in range(8):
-                bitlist[4 + i] = binaryspeed[i]
+                bitlist[5 + i] = binaryspeed[i]
 
         binaryspeed = '{0:08b}'.format(sliders['speed'].value)
         for i in range(8):
-            bitlist[4 + i] = binaryspeed[i]
+            bitlist[5 + i] = binaryspeed[i]
 
         binarysteering = '{0:08b}'.format(sliders['keyboard_steering'].value)
         for i in range(8):
-            bitlist[12 + i] = binarysteering[i]
+            bitlist[13 + i] = binarysteering[i]
 
         button_in = pg.mouse.get_pressed()
         mouse_pos = pg.mouse.get_pos()
         for button in buttons.values():
-            button.held = button.rect.collidepoint(mouse_pos) and button_in[0]
+            button.held = (button.rect.collidepoint(mouse_pos) and button_in[0]) or key_in[button.key]
             if button.held:
                 button.on_hold(button, *button.on_hold_args, **button.on_hold_kwargs)
 
@@ -356,7 +329,7 @@ def fancy_controls():
 
 if __name__ == '__main__':
     while True:
-        connect_query = input('Want to connect to the rover? (y/n): ').lower().split()
+        connect_query = input('Want to connect to the rover? (y/n) [+ip]: ').lower().split()
         if len(connect_query) == 1:
             ip = c.pi_ip
             connect_query = connect_query[0]
@@ -366,26 +339,28 @@ if __name__ == '__main__':
         else: connect_query = ''
         if connect_query in ('y', 'yes'):
             connect_query = 'y'
-            print("Trying to establish a connection with the rover...")
+            print('Trying to establish a connection with the rover...')
             try:
                 inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 inter.connect((ip, 8080))
             except:
                 print('Could not connect to the rover. Continuing without connection...')
                 connect_query = 'n'
-            else: print("Connection established.")
+            else: print('Connection established')
             break
         elif connect_query in ('n', 'no'):
             connect_query = 'n'
             break
         else: print('Please enter a valid response')
 
-    control_opts = {'fancy': fancy_controls, 'text': text_controls}
+    control_opts = {'': fancy_controls, 'text': text_controls}
     while True:
-        controls_choice = input('Which type of controlls do you want? (fancy/text): ').lower()
-        if controls_choice in control_opts.keys():
-            control_opts[controls_choice]()
+        controls_choice = input('Do you want text controls? (y/n): ').lower()
+        if controls_choice in ('y', 'yes'):
+            text_controls()
+        elif connect_query in ('n', 'no'):
+            fancy_controls()
         else:
-            controlls_choice = input("Not a valid choice. Available choices: 'WASD' or 'Text' ")
+            controls_choice = input('Please enter a valid response (y/n): ')
 
 inter.close()
