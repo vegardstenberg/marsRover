@@ -354,11 +354,11 @@ if __name__ == '__main__':
         else: print('Please enter a valid response')
 
     control_opts = {'': fancy_controls, 'text': text_controls}
+    controls_choice = input('Do you want text controls? (y/n): ').lower()
     while True:
-        controls_choice = input('Do you want text controls? (y/n): ').lower()
         if controls_choice in ('y', 'yes'):
             text_controls()
-        elif connect_query in ('n', 'no'):
+        elif controls_choice in ('n', 'no'):
             fancy_controls()
         else:
             controls_choice = input('Please enter a valid response (y/n): ')

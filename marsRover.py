@@ -1,10 +1,11 @@
 #import RPi.GPIO as GPIO
 import time
 import socket
+from io import BlockingIOError
 from roboclaw import Roboclaw
 import constants as c
-from fastnumbers import isfloat
 from datetime import datetime as dt, timedelta as td
+from time import sleep
 socket.setdefaulttimeout(10)
 
 def setup(ip=c.pi_ip):
@@ -81,22 +82,30 @@ args = {
 def loop(local_testing=False):
 	global connection
 	while True:
-		try: connection = inter.accept()[0]
+		try:
+			connection = inter.accept()[0]
+			connection.setblocking(0)
 		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
 		else: break
 	while True:
 		try: data = connection.recv(4096)
-		except socket.timeout: data = b'&1'
+		except BlockingIOError: data = b'&1'
 		data = data.decode('utf-8').split('&')[-1]
 		text_controls = data[0]
 		data = data[1:]
 		now = dt.now()
-		#execute_commands
-		for command in (data.split('|') + [cmd for time, cmd in future_commands.items() if now > time]):
+		execute_commands = data.split('|') if data else []
+		for time, cmd in future_commands.copy().items():
+			if now <= time: continue
+			execute_commands.append(cmd)
+			del future_commands[time]
+		for command in execute_commands:
 			print(f'Executing command: {command}')
 			command = command.split(' ')
-			if command[0] != 'stop': future_commands[now + td(seconds=int(command[1]))] = 'stop'
-			if not local_testing: globals()[command[0]](*(globals()[arg_name] for arg_name in args[command[0]]))
+			if command[0] != 'stop':
+				future_commands[now + td(seconds=int(command[1]))] = 'stop'
+				if not local_testing: globals()[command[0]](*(globals()[arg_name] for arg_name in args[command[0]]))
+			elif not local_testing: stop()
 		if text_controls: continue
 		else:
 			speed = int(data[4:12], 2) // 2
