@@ -131,7 +131,7 @@ def loop(local_testing=False):
 		if data:
 			speed = int(data[4:12], 2) // 2
 			steering = int(data[12:20], 2)
-			print('Speed: ' + speed + ' | Steering: ' + steering + ' | Raw decoded data: ' + data)
+			print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
 
 		if local_testing: continue
 		if data[0] == '1': drive(speed)
