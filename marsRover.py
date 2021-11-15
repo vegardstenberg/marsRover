@@ -154,7 +154,7 @@ if __name__ == '__main__':
 		if retry_query == 1:
 			new_ip = input('Enter new ip address: ')
 			setup(ip=new_ip)
-			print(f'Setup completed with ip "' + new_ip + '"')
+			print('Setup completed with ip "' + new_ip + '"')
 		elif retry_query == 2:
 			setup(ip='localhost')
 			local_testing = True
