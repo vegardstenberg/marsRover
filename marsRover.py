@@ -24,14 +24,15 @@ def setup(ip=c.pi_ip):
 	inter.bind((ip, 8080))
 	inter.listen(5)
 
-	address1 = b'0x80' #front motors
-	address2 = b'0x81' #mid motors
-	address3 = b'0x82' #back motors
+	address1 = 0x80 #front motors
+	address2 = 0x81 #mid motors
+	address3 = 0x82 #back motors
 
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
 
 def drive(speed):
+	speed = str(speed).encode()
 	roboclaw.ForwardM1(address1, speed)
 	roboclaw.ForwardM2(address1, speed)
 	roboclaw.ForwardM1(address2, speed)
@@ -41,6 +42,7 @@ def drive(speed):
 	print('drive')
 
 def reverse(speed):
+	speed = str(speed).encode()
 	roboclaw.BackwardM1(address1, speed)
 	roboclaw.BackwardM2(address1, speed)
 	roboclaw.BackwardM1(address2, speed)
@@ -50,6 +52,7 @@ def reverse(speed):
 	print('reverse')
 
 def turn_left(speed):
+	speed = str(speed).encode()
 	roboclaw.ForwardM1(address1, speed)
 	roboclaw.BackwardM2(address1, speed)
 	roboclaw.ForwardM1(address2, speed)
@@ -59,6 +62,7 @@ def turn_left(speed):
 	print('turn left')
 
 def turn_right(speed):
+	speed = str(speed).encode()
 	roboclaw.ForwardM2(address1, speed)
 	roboclaw.BackwardM1(address1, speed)
 	roboclaw.ForwardM2(address2, speed)
