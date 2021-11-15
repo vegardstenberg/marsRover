@@ -108,7 +108,6 @@ def loop(local_testing=False):
 		except BlockingIOError:
 			data = None
 			continue
-		print(data)
 		text_controls = False
 		if data:
 			data = data.decode('utf-8').split('&')[-2]
