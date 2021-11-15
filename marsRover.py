@@ -69,9 +69,12 @@ def turn_right(speed):
 	print('turn right')
 
 def stop():
-	value = 0
-	roboclaw.BackwardM1(b'\x80', value)
-	roboclaw.BackwardM2(b'\x80', value)
+	value = b'\x80'
+	roboclaw.BackwardM1(
+		address1,
+		value
+	)
+	roboclaw.BackwardM2(address1, value)
 	roboclaw.BackwardM1(address2, value)
 	roboclaw.BackwardM2(address2, value)
 	roboclaw.BackwardM1(address3, value)
