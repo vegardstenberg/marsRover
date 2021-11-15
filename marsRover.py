@@ -108,6 +108,7 @@ def loop(local_testing=False):
 		except BlockingIOError:
 			data = None
 			continue
+		print(data)
 		text_controls = False
 		if data:
 			data = data.decode('utf-8').split('&')[-1]
@@ -134,7 +135,6 @@ def loop(local_testing=False):
 			continue
 		'''
 		if data:
-			print(data)
 			speed = int(data[4:12], 2) // 2
 			steering = int(data[12:20], 2)
 			print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
