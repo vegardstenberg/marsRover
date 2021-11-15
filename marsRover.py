@@ -126,7 +126,7 @@ def loop(local_testing=False):
 		else:
 			speed = int(data[4:12], 2) // 2
 			steering = int(data[12:20], 2)
-			print(f"Speed: {speed} | Steering: {steering} | Raw decoded data: {data}")
+			print('Speed: ' + speed + ' | Steering: ' + steering + ' | Raw decoded data: ' + data)
 
 		if local_testing: continue
 		if data[0] == '1': drive(speed)
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 		if retry_query == 1:
 			new_ip = input('Enter new ip address: ')
 			setup(ip=new_ip)
-			print(f'Setup completed with ip "{new_ip}"')
+			print(f'Setup completed with ip "' + new_ip + '"')
 		elif retry_query == 2:
 			setup(ip='localhost')
 			local_testing = True
