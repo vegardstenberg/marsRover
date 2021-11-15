@@ -134,6 +134,7 @@ def loop(local_testing=False):
 			continue
 		'''
 		if data:
+			print(data)
 			speed = int(data[4:12], 2) // 2
 			steering = int(data[12:20], 2)
 			print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
