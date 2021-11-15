@@ -10,7 +10,7 @@ socket.setdefaulttimeout(10)
 
 class Queue(dict):
 	def next(self, return_object='item'):
-		return get_attr(self, f'{return_object}s')()[-1]
+		return get_attr(self, return_object + 's')()[-1]
 
 def setup(ip=c.pi_ip):
 	global inter
