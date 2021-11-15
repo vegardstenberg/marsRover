@@ -24,9 +24,9 @@ def setup(ip=c.pi_ip):
 	inter.bind((ip, 8080))
 	inter.listen(5)
 
-	address1 = 0x80 #front motors
-	address2 = 0x81 #mid motors
-	address3 = 0x82 #back motors
+	address1 = b'0x80' #front motors
+	address2 = b'0x81' #mid motors
+	address3 = b'0x82' #back motors
 
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
