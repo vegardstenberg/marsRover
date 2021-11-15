@@ -69,7 +69,7 @@ def turn_right(speed):
 	print('turn right')
 
 def stop():
-	value = b'\x80'
+	value = 0
 	roboclaw.BackwardM1(
 		address1,
 		value
