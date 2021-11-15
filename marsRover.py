@@ -141,7 +141,7 @@ def loop(local_testing=False):
 		elif data[3] == '1': turn_right(speed)
 		else: stop()
 
-def stop():
+def close():
 	print("Stopping")
 	if 'connecton' in globals().keys(): connection.close()
 
@@ -168,4 +168,4 @@ if __name__ == '__main__':
 		else: exit()
 	print("Running")
 	try: loop(local_testing)
-	except KeyboardInterrupt: stop()
+	except KeyboardInterrupt: close()
