@@ -8,6 +8,10 @@ from datetime import datetime as dt, timedelta as td
 from time import sleep
 socket.setdefaulttimeout(10)
 
+class Queue(dict):
+	def next(self, return_object='item'):
+		return get_attr(self, f'{return_object}s')()[-1]
+
 def setup(ip=c.pi_ip):
 	global inter
 	global address1
@@ -72,15 +76,21 @@ def stop():
 	roboclaw.BackwardM2(address3, 0)
 	print('stop')
 
-future_commands = {}
+queue = Queue()
 txt_speed = 128
 txt_turn = 0
 args = {
 	'drive': ('txt_speed',)
 }
 
+def get_events(data):
+	if data == 'stop': return data
+	data = data.split('|')
+	return ({args[0]: args[1:]} for args in (command.split() for command in data))
+
 def loop(local_testing=False):
 	global connection
+	global now
 	while True:
 		try:
 			connection = inter.accept()[0]
@@ -88,13 +98,18 @@ def loop(local_testing=False):
 		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
 		else: break
 	while True:
+		now = dt.now() #Updates the time on every iteration
 		try: data = connection.recv(4096)
-		except BlockingIOError: data = b'&1'
-		data = data.decode('utf-8').split('&')[-1]
-		text_controls = data[0]
-		data = data[1:]
-		now = dt.now()
-		execute_commands = data.split('|') if data else []
+		except BlockingIOError: data = None
+		text_controls = True
+		if data:
+			data = data.decode('utf-8').split('&')[-1]
+			text_controls = data[0]
+			data = data[1:]
+			if text_controls:
+				get_events(data)
+		'''
+		execute_commands = data.split('|')
 		for time, cmd in future_commands.copy().items():
 			if now <= time: continue
 			execute_commands.append(cmd)
@@ -106,6 +121,7 @@ def loop(local_testing=False):
 				future_commands[now + td(seconds=int(command[1]))] = 'stop'
 				if not local_testing: globals()[command[0]](*(globals()[arg_name] for arg_name in args[command[0]]))
 			elif not local_testing: stop()
+		'''
 		if text_controls: continue
 		else:
 			speed = int(data[4:12], 2) // 2
