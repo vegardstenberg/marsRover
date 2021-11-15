@@ -32,7 +32,7 @@ def setup(ip=c.pi_ip):
 	roboclaw.Open()
 
 def drive(speed):
-	speed = str(speed).encode()
+	print((speed, type(speed)))
 	roboclaw.ForwardM1(address1, speed)
 	roboclaw.ForwardM2(address1, speed)
 	roboclaw.ForwardM1(address2, speed)
@@ -42,7 +42,6 @@ def drive(speed):
 	print('drive')
 
 def reverse(speed):
-	speed = str(speed).encode()
 	roboclaw.BackwardM1(address1, speed)
 	roboclaw.BackwardM2(address1, speed)
 	roboclaw.BackwardM1(address2, speed)
@@ -52,7 +51,6 @@ def reverse(speed):
 	print('reverse')
 
 def turn_left(speed):
-	speed = str(speed).encode()
 	roboclaw.ForwardM1(address1, speed)
 	roboclaw.BackwardM2(address1, speed)
 	roboclaw.ForwardM1(address2, speed)
@@ -62,7 +60,6 @@ def turn_left(speed):
 	print('turn left')
 
 def turn_right(speed):
-	speed = str(speed).encode()
 	roboclaw.ForwardM2(address1, speed)
 	roboclaw.BackwardM1(address1, speed)
 	roboclaw.ForwardM2(address2, speed)
