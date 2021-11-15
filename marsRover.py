@@ -69,12 +69,13 @@ def turn_right(speed):
 	print('turn right')
 
 def stop():
-	roboclaw.BackwardM1(address1, 0)
-	roboclaw.BackwardM2(address1, 0)
-	roboclaw.BackwardM1(address2, 0)
-	roboclaw.BackwardM2(address2, 0)
-	roboclaw.BackwardM1(address3, 0)
-	roboclaw.BackwardM2(address3, 0)
+	value = 0
+	roboclaw.BackwardM1(b'\x80', value)
+	roboclaw.BackwardM2(b'\x80', value)
+	roboclaw.BackwardM1(address2, value)
+	roboclaw.BackwardM2(address2, value)
+	roboclaw.BackwardM1(address3, value)
+	roboclaw.BackwardM2(address3, value)
 	print('stop')
 
 queue = Queue()
