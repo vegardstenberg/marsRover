@@ -186,7 +186,7 @@ class Slider(Texture):
 def send_data(bitlist, is_string=False):
     if not is_string: bitstring = ''.join(bitlist)
     print(bitstring)
-    bitstring = f'&{bitstring}'.encode('utf-8')
+    bitstring = f'&{bitstring}&'.encode('utf-8')
     if connect_query == 'y':
         inter.sendall(bitstring)
 
