@@ -123,9 +123,9 @@ class Roboclaw:
 	def _sendcommand(self,address,command):
 		self.crc_clear()
 		self.crc_update(address)
-		self._port.write(chr(address))
+		self._port.write(chr(address).encode())
 		self.crc_update(command)
-		self._port.write(chr(command))
+		self._port.write(chr(command).encode())
 		return
 
 	def _readchecksumword(self):
