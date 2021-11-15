@@ -313,6 +313,7 @@ class Roboclaw:
 			if self._writechecksum():
 				return True
 			trys=trys-1
+			print(trys)
 		return False
 
 	def _write11(self,address,cmd,val1,val2):
