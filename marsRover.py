@@ -100,8 +100,10 @@ def loop(local_testing=False):
 	while True:
 		now = dt.now() #Updates the time on every iteration
 		try: data = connection.recv(4096)
-		except BlockingIOError: data = None
-		text_controls = True
+		except BlockingIOError:
+			data = None
+			continue
+		text_controls = False
 		if data:
 			data = data.decode('utf-8').split('&')[-1]
 			text_controls = data[0]
@@ -121,9 +123,12 @@ def loop(local_testing=False):
 				future_commands[now + td(seconds=int(command[1]))] = 'stop'
 				if not local_testing: globals()[command[0]](*(globals()[arg_name] for arg_name in args[command[0]]))
 			elif not local_testing: stop()
+
+		if text_controls:
+			print('Text controls are on')
+			continue
 		'''
-		if text_controls: continue
-		else:
+		if data:
 			speed = int(data[4:12], 2) // 2
 			steering = int(data[12:20], 2)
 			print('Speed: ' + speed + ' | Steering: ' + steering + ' | Raw decoded data: ' + data)
