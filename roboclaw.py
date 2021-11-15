@@ -173,7 +173,7 @@ class Roboclaw:
 
 	def _writebyte(self,val):
 		self.crc_update(val&0xFF)
-		self._port.write(chr(val&0xFF))
+		self._port.write(chr(val&0xFF).encode())
 
 	def _writesbyte(self,val):
 		self._writebyte(val)
@@ -640,7 +640,7 @@ class Roboclaw:
 	def SendRandomData(self,cnt):
 		for i in range(0,cnt):
 			byte = random.getrandbits(8)
-			self._port.write(chr(byte))
+			self._port.write(chr(byte).encode())
 		return
 
 	def ForwardM1(self,address,val):
