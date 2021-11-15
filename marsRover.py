@@ -110,7 +110,7 @@ def loop(local_testing=False):
 			continue
 		text_controls = False
 		if data:
-			data = data.decode('utf-8').split('&')[-2]
+			data = data.decode('utf-8').replace('&&', '&').split('&')[-2]
 			text_controls = data[0]
 			data = data[1:]
 			if text_controls:
