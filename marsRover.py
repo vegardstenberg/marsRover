@@ -24,7 +24,7 @@ class Events:
 
 	class ReverseEvent(ActionEvent):
 		def run(self, **kwargs):
-			reverse(kwargs['speed']) #h
+			reverse(kwargs['speed'])
 
 	class TurnLeftEvent(ActionEvent):
 		def run(self, **kwargs):
