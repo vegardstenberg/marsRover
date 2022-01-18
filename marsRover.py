@@ -34,17 +34,18 @@ class Events:
 		def run(self, **kwargs):
 			turn_right(kwargs['turning'])
 
-	class StopEvent(ActionEvent):
+	class StopEvent(Event):
 		def run(self, **kwargs):
 			stop()
 
 
 	class SetupEvent(Event): pass
-	class SetSpeedEvent(Event):
+	class SetSpeedEvent(SetupEvent):
 		def __init__(self, speed):
 			self.speed = speed
 
 		def run(self):
+			print(('SetSpeed', self.speed))
 			return ('speed', self.speed)
 
 class Queue(list):
@@ -55,7 +56,10 @@ class Queue(list):
 
 	def append(self, event):
 		event.runtime = self.endtime if self.endtime else now
-		self.endtime = event.endtime = event.runtime + event.duration
+		if isinstance(event, Events.ActionEvent):
+			self.endtime = event.endtime = event.runtime + event.duration
+		elif isinstance(event, Events.SetupEvent):
+			self.endtime = event.endtime = event.runtime
 		super().append(event)
 
 	def run_next(self):
