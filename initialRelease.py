@@ -195,7 +195,7 @@ def text_controls():
     command_list = ('help', 'drive', 'reverse', 'turn', 'set_speed', 'get_speed', 'set_turn', 'get_turn', 'stop')
     while True:
         print('Available commands: HELP, FORWARD, BACKWARD, LEFT, RIGHT')
-        commands = input('Enter a command (to enter multiple, use \'|\'):  ').lower()
+        commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
         send_data(f'1{commands}')
 
 def fancy_controls():
