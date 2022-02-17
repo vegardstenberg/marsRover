@@ -38,7 +38,6 @@ class Events:
 		def run(self, **kwargs):
 			stop()
 
-
 	class SetupEvent(Event): pass
 	class SetSpeedEvent(SetupEvent):
 		def __init__(self, speed):
@@ -173,7 +172,7 @@ def loop():
 			except BlockingIOError: data = None
 			if data:
 				data = data.decode('utf-8').replace('&&', '&').split('&')[-2]
-				text_controls = data[0]
+				text_controls = int(data[0])
 				data = data[1:]
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('|')):
@@ -186,7 +185,6 @@ def loop():
 					speed = int(data[4:12], 2) // 2
 					steering = int(data[12:20], 2)
 					print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
-					if local_testing: continue
 					if data[0] == '1': drive(speed)
 					elif data[2] == '1': reverse(speed)
 					elif data[1] == '1': turn_left(speed)
