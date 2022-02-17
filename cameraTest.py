@@ -29,7 +29,7 @@ def CameraDisplay():
             break
 
         #for some reasons the frames appeared inverted
-        frame = np.fliplr(frame)
+        # frame = np.fliplr(frame)
         frame = np.rot90(frame)
 
         # The video uses BGR colors and PyGame needs RGB
