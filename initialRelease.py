@@ -14,6 +14,7 @@ from sys import exit
 import time
 from traceback import print_tb
 import constants as c
+import cameraTest as cam
 import pgmath as math #Imports the pgmath.py file in this repository, which contains everything from the math.py library, plus some extra pygame math for convenience
 
 class Texture: #Class stolen from some other script I have lol
@@ -271,6 +272,8 @@ def fancy_controls():
     while True:
         clk.tick(30)
         screen.fill(c.rgb_black)
+        cam_frame = cam.get_frame()
+        screen.blit(cam_frame, dest=buttons['a'].rect.bottomleft)
 
         for event in pg.event.get():
             if event.type == pg.QUIT: exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
