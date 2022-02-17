@@ -108,7 +108,7 @@ class Button(Texture):
             _blit.blit(tx.tx, tx.rect.topleft)
         return _blit
 
-class Slider(Texture):
+class Slider(Texture): # carbonara
     def __init__(self, valrange, default_value, increment, poskeys, negkeys, border=c.b_marg, border_color=(255, 255, 255), bg_color=(0, 0, 0), slider_tx={'tx': 'textures/gradient.png'}, horizontal=False, reverse=False, size_includes_border=False, visible=True, **pos):
         if valrange[1] - valrange[0] < 0:
             reverse = not reverse
@@ -130,7 +130,7 @@ class Slider(Texture):
         self.keys = {k: v if type(v) in (list, tuple) else (v,) for k, v in (('pos', poskeys), ('neg', negkeys))}
         self.visible = visible
 
-        self.slider = Texture(**slider_tx, topright=(self.rect.w - border, border))
+        self.slider = Texture(**slider_tx, topright=(self.rect.w - border, border)) # bolognese
         if horizontal: self.slider.original_tx = pg.transform.rotate(self.slider.original_tx, -90)
         self.reverse_slider = self.slider.copy()
         flipped_slider = getattr(self, 'slider' if reverse else 'reverse_slider')
@@ -148,6 +148,8 @@ class Slider(Texture):
             self.reverse_slider.original_tx = pg.transform.scale(self.reverse_slider.original_tx, (bg_tx.rect.w, round(bg_tx.rect.h * length_scale_neg)))
         self.slider.update_rect(anchor='bottomleft' if reverse else 'topright')
         self.reverse_slider.update_rect(anchor='topright' if reverse else 'bottomleft')
+        
+# æ gir opp ass https://upload.wikimedia.org/wikipedia/commons/7/73/Mama_instant_noodle_block.jpg
 
     @property
     def value(self):
