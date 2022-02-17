@@ -187,7 +187,7 @@ class Slider(Texture): # carbonara
 
 def send_data(bitlist, is_string=False):
     if not is_string: bitstring = ''.join(bitlist)
-    print(bitstring[1:])
+    print(bitstring)
     bitstring = f'&{bitstring}&'.encode('utf-8')
     if connect_query == 'y':
         inter.sendall(bitstring)
@@ -196,7 +196,7 @@ def text_controls():
     print('Text controlls activated')
     command_list = ('help', 'drive', 'reverse', 'turn', 'set_speed', 'get_speed', 'set_turn', 'get_turn', 'stop')
     while True:
-        print('Available commands: HELP, FORWARD, BACKWARD, LEFT, RIGHT')
+        print('Available commands: HELP, DRIVE, REVERSE, TURN LEFT, TURN RIGHT')
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
         send_data(f'1{commands}')
 
