@@ -14,7 +14,7 @@ from sys import exit
 import time
 from traceback import print_tb
 import constants as c
-import cameraTest as cam
+import camera as cam
 import pgmath as math #Imports the pgmath.py file in this repository, which contains everything from the math.py library, plus some extra pygame math for convenience
 
 class Texture: #Class stolen from some other script I have lol
