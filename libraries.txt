@@ -2,3 +2,4 @@ External libraries used:
  - Roboclaw
  - pygame (fancy controls only)
  - fastnumbers
+ - opencv / cv2
