@@ -5,6 +5,8 @@ Created on Thu Sep  3 11:27:40 2020
 @author: Vegard Hansen Stenberg
 """
 
+# ! CAMERA SHIT IS BROKEN FORGOT SHIT STREAM SHIT NEED FIX
+
 import socket
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
