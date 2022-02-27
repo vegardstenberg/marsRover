@@ -4,7 +4,7 @@ from tkinter import ttk
 """
 ? not sure if using tkinter is possible
 TODO: Implement sliders, Map to buttons, figure out how to implement camera, replace pygame
-! Will make sepparate branch when implementing, because of practicality
+! Will make sepparate branch when implementing to initialRelease.py, because I'm afraid to break shitt
 """
 
 def btn_clicked():
