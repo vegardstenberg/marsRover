@@ -30,6 +30,33 @@ def main():
         499.0, 299.0,
         image=background_img)
 
+    # slider current value
+    current_value = tk.DoubleVar()
+
+    def get_current_value():
+        return '{: .2f}'.format(current_value.get())
+
+
+    def slider_changed(event):
+        value_label.configure(text=get_current_value())
+
+    # Slider
+    sliderVertical = ttk.Scale(
+        window,
+        from_=0,
+        to=100,
+        orient='vertical',  # vertical
+        command=slider_changed,
+        variable=current_value
+    )
+
+    # Plotting the slider
+    sliderVertical.place(
+        x = 800, y = 300,
+        width = 80,
+        height = 400
+    )
+
     img0 = PhotoImage(file = f"New Design\\img0.png")
     b0 = Button(
         image = img0,

@@ -11,7 +11,7 @@ import sys as sus
 cap = cv2.VideoCapture(0)
 #Gets fps of your camera
 fps = cap.get(cv2.CAP_PROP_FPS)
-print("fps:", fps)
+#print("fps:", fps)
 #If your camera can achieve 60 fps
 #Else just have this be 1-30 fps
 cap.set(cv2.CAP_PROP_FPS, 60)
