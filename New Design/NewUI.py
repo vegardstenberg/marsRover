@@ -31,31 +31,77 @@ def main():
         image=background_img)
 
     # slider current value
-    current_value = tk.DoubleVar()
-
+    current_value = DoubleVar()
+    current_value2 = DoubleVar()
+    
     def get_current_value():
         return '{: .2f}'.format(current_value.get())
 
+    value_label = ttk.Label(
+        window,
+        text=get_current_value()
+    )
+    
+    def get_current_value2():
+        return '{: .2f}'.format(current_value2.get())
 
-    def slider_changed(event):
-        value_label.configure(text=get_current_value())
+    value_label2 = ttk.Label(
+        window,
+        text=get_current_value2()
+    )
 
+    def sliderVertical_changed(event):
+        value_label.configure(text = get_current_value())
+        print(f"Curent Vertical Slider Value: {str(get_current_value())}")
+    
+    def sliderHorizontal_changed(event):
+        value_label.configure(text = get_current_value())
+        print(f"Curent Horizontal Slider Value: {str(get_current_value2())}")
+
+
+    # style = ttk.Style()
+    # style.configure("TScale", background = "#808080")
+    
+    # Import the tcl file with the tk.call method
+    window.tk.call("source", "New Design\\tkBreeze-master")  # Put here the path of your theme file
+
+    # Set the theme with the theme_use method
+    style.theme_use("breeze-dark")  # Theme files create a ttk theme, here you can put its name
+    
     # Slider
     sliderVertical = ttk.Scale(
         window,
-        from_=0,
-        to=100,
-        orient='vertical',  # vertical
-        command=slider_changed,
-        variable=current_value
+        from_ = 100,
+        to = 0,
+        orient = 'vertical',  # vertical
+        command = sliderVertical_changed,
+        variable = current_value,
+        style = "style",
     )
-
+    
     # Plotting the slider
     sliderVertical.place(
-        x = 800, y = 300,
-        width = 80,
-        height = 400
-        sticky = "we"
+        x = 900, y = 10,
+        width = 86,
+        height = 578,
+    )
+    
+    # Slider2
+    sliderHorizontal = ttk.Scale(
+        window,
+        from_ = 0,
+        to = 100,
+        orient = 'horizontal',  # vertical
+        command = sliderHorizontal_changed,
+        variable = current_value2,
+        style = "TScale",
+    )
+    
+    # Plotting the slider2
+    sliderHorizontal.place(
+        x = 10, y = 502,
+        width = 877,
+        height = 86,
     )
 
     img0 = PhotoImage(file = f"New Design\\img0.png")
