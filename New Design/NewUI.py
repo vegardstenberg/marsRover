@@ -55,6 +55,7 @@ def main():
         x = 800, y = 300,
         width = 80,
         height = 400
+        sticky = "we"
     )
 
     img0 = PhotoImage(file = f"New Design\\img0.png")

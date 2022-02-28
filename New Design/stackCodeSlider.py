@@ -37,7 +37,6 @@ slider = ttk.Scale(
 slider.grid(
     column=1,
     row=0,
-    sticky='we'
 )
 
 # value label
@@ -45,10 +44,11 @@ value_label = ttk.Label(
     root,
     text=get_current_value()
 )
+""" 
 value_label.grid(
     row=2,
     columnspan=2,
     sticky='n'
-)
+) """
 
 root.mainloop()
