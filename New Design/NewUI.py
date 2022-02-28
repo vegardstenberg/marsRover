@@ -1,9 +1,8 @@
 from tkinter import *
 from tkinter import ttk
-
 """
 ? not sure if using tkinter is possible
-TODO: Implement sliders, Map to buttons, figure out how to implement camera, replace pygame
+TODO: Map to buttons, figure out how to implement camera, replace pygame
 ! Will make sepparate branch when implementing to initialRelease.py, because I'm afraid to break shitt
 """
 
@@ -59,14 +58,16 @@ def main():
         print(f"Curent Horizontal Slider Value: {str(get_current_value2())}")
 
 
-    # style = ttk.Style()
-    # style.configure("TScale", background = "#808080")
+    style = ttk.Style()
+    style.configure("TScale", background = "#808080")
     
+    # style = ttk.Style(window)
+
     # Import the tcl file with the tk.call method
-    window.tk.call("source", "New Design\\tkBreeze-master")  # Put here the path of your theme file
+    # window.tk.call(")  # Put here the path of your theme file
 
     # Set the theme with the theme_use method
-    style.theme_use("breeze-dark")  # Theme files create a ttk theme, here you can put its name
+    # style.theme_use("breeze-dark")  # Theme files create a ttk theme, here you can put its name
     
     # Slider
     sliderVertical = ttk.Scale(
@@ -76,7 +77,7 @@ def main():
         orient = 'vertical',  # vertical
         command = sliderVertical_changed,
         variable = current_value,
-        style = "style",
+        style = "TScale",
     )
     
     # Plotting the slider
