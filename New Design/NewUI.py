@@ -10,12 +10,12 @@ def btn_clicked():
     print("Button Clicked")
 
 def main():
-    window = Tk()
+    root = Tk()
 
-    window.geometry("1000x600")
-    window.configure(bg = "#FFFFFF")
+    root.geometry("1000x600")
+    root.configure(bg = "#FFFFFF")
     canvas = Canvas(
-        window,
+        root,
         bg = "#FFFFFF",
         height = 600,
         width = 1000,
@@ -37,7 +37,7 @@ def main():
         return '{: .2f}'.format(current_value.get())
 
     value_label = ttk.Label(
-        window,
+        root,
         text=get_current_value()
     )
     
@@ -45,7 +45,7 @@ def main():
         return '{: .2f}'.format(current_value2.get())
 
     value_label2 = ttk.Label(
-        window,
+        root,
         text=get_current_value2()
     )
 
@@ -61,17 +61,17 @@ def main():
     style = ttk.Style()
     style.configure("TScale", background = "#808080")
     
-    # style = ttk.Style(window)
+    # style = ttk.Style root)
 
     # Import the tcl file with the tk.call method
-    # window.tk.call(")  # Put here the path of your theme file
+    #   root.tk.call(")  # Put here the path of your theme file
 
     # Set the theme with the theme_use method
     # style.theme_use("breeze-dark")  # Theme files create a ttk theme, here you can put its name
     
     # Slider
     sliderVertical = ttk.Scale(
-        window,
+        root,
         from_ = 100,
         to = 0,
         orient = 'vertical',  # vertical
@@ -89,7 +89,7 @@ def main():
     
     # Slider2
     sliderHorizontal = ttk.Scale(
-        window,
+        root,
         from_ = 0,
         to = 100,
         orient = 'horizontal',  # vertical
@@ -157,8 +157,8 @@ def main():
         width = 78,
         height = 80)
 
-    window.resizable(False, False)
-    window.mainloop()
+    root.resizable(False, False)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()

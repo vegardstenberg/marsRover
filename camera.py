@@ -3,10 +3,6 @@ import pygame
 import numpy as np
 import sys as sus
 
-"""
-@Author: ic1cle; Sigurd Strand Osen
-"""
-
 #0 Is the built in camera
 cap = cv2.VideoCapture(0)
 #Gets fps of your camera
