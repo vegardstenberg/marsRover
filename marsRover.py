@@ -95,11 +95,17 @@ def setup(ip=c.pi_ip):
 def drive(speed):
 	print('drive')
 	if not local_testing:
+		print('Drive motor 1')
 		roboclaw.ForwardM1(address1, speed)
+		print('Drive motor 2')
 		roboclaw.ForwardM2(address1, speed)
+		print('Drive motor 3')
 		roboclaw.ForwardM1(address2, speed)
+		print('Drive motor 4')
 		roboclaw.ForwardM2(address2, speed)
+		print('Drive motor 5')
 		roboclaw.ForwardM1(address3, speed)
+		print('Drive motor 6')
 		roboclaw.ForwardM2(address3, speed)
 
 def reverse(speed):
