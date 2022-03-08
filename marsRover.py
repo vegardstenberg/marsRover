@@ -190,6 +190,7 @@ def loop():
 				else:
 					speed = int(data[4:12], 2) // 2
 					steering = int(data[12:20], 2)
+					print('Raw data: ' + str(data))
 					print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
 					if data[0] == '1': drive(speed)
 					elif data[2] == '1': reverse(speed)
