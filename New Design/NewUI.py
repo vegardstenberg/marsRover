@@ -32,7 +32,7 @@ def main():
     # slider current value
     current_value = DoubleVar()
     current_value2 = DoubleVar()
-    
+
     def get_current_value():
         return '{: .2f}'.format(current_value.get())
 
@@ -40,7 +40,7 @@ def main():
         root,
         text=get_current_value()
     )
-    
+
     def get_current_value2():
         return '{: .2f}'.format(current_value2.get())
 
@@ -52,7 +52,7 @@ def main():
     def sliderVertical_changed(event):
         value_label.configure(text = get_current_value())
         print(f"Curent Vertical Slider Value: {str(get_current_value())}")
-    
+
     def sliderHorizontal_changed(event):
         value_label.configure(text = get_current_value())
         print(f"Curent Horizontal Slider Value: {str(get_current_value2())}")
@@ -60,7 +60,7 @@ def main():
 
     style = ttk.Style()
     style.configure("TScale", background = "#808080")
-    
+
     # style = ttk.Style root)
 
     # Import the tcl file with the tk.call method
@@ -68,7 +68,7 @@ def main():
 
     # Set the theme with the theme_use method
     # style.theme_use("breeze-dark")  # Theme files create a ttk theme, here you can put its name
-    
+
     # Slider
     sliderVertical = ttk.Scale(
         root,
@@ -79,14 +79,14 @@ def main():
         variable = current_value,
         style = "TScale",
     )
-    
+
     # Plotting the slider
     sliderVertical.place(
         x = 900, y = 10,
         width = 86,
         height = 578,
     )
-    
+
     # Slider2
     sliderHorizontal = ttk.Scale(
         root,
@@ -97,7 +97,7 @@ def main():
         variable = current_value2,
         style = "TScale",
     )
-    
+
     # Plotting the slider2
     sliderHorizontal.place(
         x = 10, y = 502,

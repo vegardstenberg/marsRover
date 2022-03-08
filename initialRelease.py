@@ -60,6 +60,13 @@ class Texture: #Class stolen from some other script I have lol
     def update_rect(self, anchor='center'):
         self.rect = self.original_tx.get_rect(**{anchor: getattr(self.rect, anchor)})
 
+    def round_edges(self, round):
+        size = self.rect.size
+        _cover = pg.Surface(size, pg.SRCALPHA)
+        pg.draw.rect(_cover, (255, 255, 255), (0, 0, *size), border_radius=round)
+        self.tx.blit(_cover, (0, 0), None, pg.BLEND_RGBA_MIN)
+        return self
+
     def copy(self):
         _copy = self.__class__(topleft=(0, 0))
         _copy.__dict__ = {k: v.copy() if hasattr(v, 'copy') else v for k, v in self.__dict__.items()}
@@ -152,7 +159,7 @@ class Slider(Texture): # carbonara
             self.reverse_slider.original_tx = pg.transform.scale(self.reverse_slider.original_tx, (bg_tx.rect.w, round(bg_tx.rect.h * length_scale_neg)))
         self.slider.update_rect(anchor='bottomleft' if reverse else 'topright')
         self.reverse_slider.update_rect(anchor='topright' if reverse else 'bottomleft')
-        
+
 # æ gir opp ass https://upload.wikimedia.org/wikipedia/commons/7/73/Mama_instant_noodle_block.jpg
 
     @property
@@ -233,7 +240,7 @@ def fancy_controls():
             y=c.b_marg if light_index == 0 else 2 * c.b_marg + c.b_size, #Button margin y-axis
             width=c.b_size, #button width
             height=c.b_size #Button height
-        )
+        ).round_edges(10)
     for light_index, letter in enumerate('wasd')}
 
     sliders = {
