@@ -177,7 +177,7 @@ def loop():
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('|')):
 						command = [arg.strip(' ') for arg in command.split(',')]
-						event_type = getattr(Events, f'{command[0].title().replace(" ", "")}Event')
+						event_type = getattr(Events, command[0].title().replace(" ", "") + 'Event')
 						event = event_type(int(command[1]))
 						queue.append(event)
 
