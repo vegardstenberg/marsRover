@@ -291,7 +291,7 @@ class Roboclaw:
 	def _writechecksum(self):
 		self._writeword(self._crc&0xFFFF)
 		val = self._readbyte()
-  		print(val)
+		print(val)
 		if(len(val)>0):
 			if val[0]:
 				return True
