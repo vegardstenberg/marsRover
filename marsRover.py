@@ -141,7 +141,7 @@ def turn_right(speed):
 def stop():
 	print('stop')
 	if not local_testing:
-		value = 255
+		value = 0
 		print('stop motor 1')
 		roboclaw.BackwardM1(address1, value)
 		print('stop motor 2')
