@@ -141,12 +141,18 @@ def turn_right(speed):
 def stop():
 	print('stop')
 	if not local_testing:
-		value = 0
+		value = 255
+		print('stop motor 1')
 		roboclaw.BackwardM1(address1, value)
+		print('stop motor 2')
 		roboclaw.BackwardM2(address1, value)
+		print('stop motor 3')
 		roboclaw.BackwardM1(address2, value)
+		print('stop motor 4')
 		roboclaw.BackwardM2(address2, value)
+		print('stop motor 5')
 		roboclaw.BackwardM1(address3, value)
+		print('stop motor 6')
 		roboclaw.BackwardM2(address3, value)
 
 queue = Queue()
