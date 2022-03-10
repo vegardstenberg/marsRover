@@ -6,8 +6,17 @@ TODO: Map to buttons, figure out how to implement camera, replace pygame
 ! Will make sepparate branch when implementing to initialRelease.py, because I'm afraid to break shitt
 """
 
-def btn_clicked():
-    print("Button Clicked")
+def Wbtn_clicked():
+    print("W Button Clicked")
+
+def Abtn_clicked():
+    print("A Button Clicked")
+
+def Sbtn_clicked():
+    print("S Button Clicked")
+
+def Dbtn_clicked():
+    print("D Button Clicked")
 
 def main():
     root = Tk()
@@ -110,7 +119,7 @@ def main():
         image = img0,
         borderwidth = 0,
         highlightthickness = 0,
-        command = btn_clicked,
+        command = Wbtn_clicked,
         relief = "flat")
 
     b0.place(
@@ -123,7 +132,7 @@ def main():
         image = img1,
         borderwidth = 0,
         highlightthickness = 0,
-        command = btn_clicked,
+        command = Dbtn_clicked,
         relief = "flat")
 
     b1.place(
@@ -136,7 +145,7 @@ def main():
         image = img2,
         borderwidth = 0,
         highlightthickness = 0,
-        command = btn_clicked,
+        command = Abtn_clicked,
         relief = "flat")
 
     b2.place(
@@ -149,7 +158,7 @@ def main():
         image = img3,
         borderwidth = 0,
         highlightthickness = 0,
-        command = btn_clicked,
+        command = Sbtn_clicked,
         relief = "flat")
 
     b3.place(
