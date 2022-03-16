@@ -1,22 +1,29 @@
 from tkinter import *
 from tkinter import ttk
+import roboclaw as RC
+import marsRover as rover
 """
 ? not sure if using tkinter is possible
 TODO: Map to buttons, figure out how to implement camera, replace pygame
 ! Will make sepparate branch when implementing to initialRelease.py, because I'm afraid to break shitt
 """
 
+
 def Wbtn_clicked():
     print("W Button Clicked")
+    RC.drive(kwargs["speed"])
 
 def Abtn_clicked():
     print("A Button Clicked")
+    RC.turn_left(kwargs["speed"])
 
 def Sbtn_clicked():
     print("S Button Clicked")
+    RC.reverse(kwargs["turning"])
 
 def Dbtn_clicked():
     print("D Button Clicked")
+    RC.turn_right(kwargs["turning"])
 
 def main():
     root = Tk()
