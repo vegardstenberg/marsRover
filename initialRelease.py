@@ -119,6 +119,10 @@ class Button(Texture):
             _blit.blit(tx.tx, tx.rect.topleft)
         return _blit
 
+    def round_edges(self, round):
+        super().round_edges(round)
+
+
 class Slider(Texture): # carbonara
     def __init__(self, valrange, default_value, increment, poskeys, negkeys, border=c.b_marg, border_color=(255, 255, 255), bg_color=(0, 0, 0), slider_tx={'tx': 'textures/gradient.png'}, horizontal=False, reverse=False, size_includes_border=False, visible=True, **pos):
         if valrange[1] - valrange[0] < 0:
@@ -240,7 +244,7 @@ def fancy_controls():
             y=c.b_marg if light_index == 0 else 2 * c.b_marg + c.b_size, #Button margin y-axis
             width=c.b_size, #button width
             height=c.b_size #Button height
-        ).round_edges(10)
+        )
     for light_index, letter in enumerate('wasd')}
 
     sliders = {
