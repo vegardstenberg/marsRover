@@ -7,6 +7,7 @@ import constants as c
 from datetime import datetime as dt, timedelta as td
 from time import sleep
 socket.setdefaulttimeout(10)
+tank_controls = True
 
 class Event:
 	def __init__(self, duration=0):
@@ -28,11 +29,13 @@ class Events:
 
 	class TurnLeftEvent(ActionEvent):
 		def run(self, **kwargs):
-			turn_left(kwargs['turning'])
+			if tank_controls: turn_left(kwargs['turning'])
+			else: turn_left_steering(kwargs['turning'])
 
 	class TurnRightEvent(ActionEvent):
 		def run(self, **kwargs):
-			turn_right(kwargs['turning'])
+			if tank_controls: turn_right(kwargs['turning'])
+			else: turn_right_steering(kwargs['turning'])
 
 	class StopEvent(Event):
 		def run(self, **kwargs):
@@ -75,9 +78,7 @@ queue = Queue()
 
 def setup(ip=c.pi_ip):
 	global inter
-	global address1
-	global address2
-	global address3
+	global address
 	global roboclaw
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -85,9 +86,13 @@ def setup(ip=c.pi_ip):
 	inter.bind((ip, 8080))
 	inter.listen(5)
 
-	address1 = 0x80 #front motors
-	address2 = 0x81 #mid motors
-	address3 = 0x82 #back motors
+	address = {
+		1: 0x80, #front motors
+		2: 0x81, #mid motors
+		3: 0x82, #back motors
+		4: 0x83, #front steering
+		5: 0x84 #back steering
+	}
 
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
@@ -95,77 +100,70 @@ def setup(ip=c.pi_ip):
 def drive(speed):
 	print('drive')
 	if not local_testing:
-		print('Drive motor 1')
-		roboclaw.ForwardM1(address1, speed)
-		print('Drive motor 2')
-		roboclaw.ForwardM2(address1, speed)
-		print('Drive motor 3')
-		roboclaw.ForwardM1(address2, speed)
-		print('Drive motor 4')
-		roboclaw.ForwardM2(address2, speed)
-		print('Drive motor 5')
-		roboclaw.ForwardM1(address3, speed)
-		print('Drive motor 6')
-		roboclaw.ForwardM2(address3, speed)
+		roboclaw.ForwardM1(address[1], speed)
+		roboclaw.ForwardM2(address[1], speed)
+		roboclaw.ForwardM1(address[2], speed)
+		roboclaw.ForwardM2(address[2], speed)
+		roboclaw.ForwardM1(address[3], speed)
+		roboclaw.ForwardM2(address[3], speed)
 
 def reverse(speed):
 	print('reverse')
 	if not local_testing:
-		roboclaw.BackwardM1(address1, speed)
-		roboclaw.BackwardM2(address1, speed)
-		roboclaw.BackwardM1(address2, speed)
-		roboclaw.BackwardM2(address2, speed)
-		roboclaw.BackwardM1(address3, speed)
-		roboclaw.BackwardM2(address3, speed)
+		roboclaw.BackwardM1(address[1], speed)
+		roboclaw.BackwardM2(address[1], speed)
+		roboclaw.BackwardM1(address[2], speed)
+		roboclaw.BackwardM2(address[2], speed)
+		roboclaw.BackwardM1(address[3], speed)
+		roboclaw.BackwardM2(address[3], speed)
 
 def turn_left(speed):
 	print('turn left')
 	if not local_testing:
-		roboclaw.ForwardM1(address1, speed)
-		roboclaw.BackwardM2(address1, speed)
-		roboclaw.ForwardM1(address2, speed)
-		roboclaw.BackwardM2(address2, speed)
-		roboclaw.ForwardM1(address3, speed)
-		roboclaw.BackwardM2(address3, speed)
+		roboclaw.ForwardM1(address[1], speed)
+		roboclaw.BackwardM2(address[1], speed)
+		roboclaw.ForwardM1(address[2], speed)
+		roboclaw.BackwardM2(address[2], speed)
+		roboclaw.ForwardM1(address[3], speed)
+		roboclaw.BackwardM2(address[3], speed)
+
+def turn_left_steering(speed):
+	print('turn left (steering)')
+	if not local_testing:
+		roboclaw.ForwardM1(address[4], speed)
+		roboclaw.ForwardM2(address[4], speed)
+		roboclaw.BackwardM1(address[5], speed)
+		roboclaw.BackwardM2(address[5], speed)
 
 def turn_right(speed):
 	print('turn right')
 	if not local_testing:
-		roboclaw.ForwardM2(address1, speed)
-		roboclaw.BackwardM1(address1, speed)
-		roboclaw.ForwardM2(address2, speed)
-		roboclaw.BackwardM1(address2, speed)
-		roboclaw.ForwardM2(address3, speed)
-		roboclaw.BackwardM1(address3, speed)
+		roboclaw.ForwardM2(address[1], speed)
+		roboclaw.BackwardM1(address[1], speed)
+		roboclaw.ForwardM2(address[2], speed)
+		roboclaw.BackwardM1(address[2], speed)
+		roboclaw.ForwardM2(address[3], speed)
+		roboclaw.BackwardM1(address[3], speed)
+
+def turn_right_steering(speed):
+	print('turn right (steering)')
+	if not local_testing:
+		roboclaw.BackwardM1(address[4], speed)
+		roboclaw.BackwardM2(address[4], speed)
+		roboclaw.ForwardM1(address[5], speed)
+		roboclaw.ForwardM2(address[5], speed)
 
 def stop():
 	print('stop')
 	if not local_testing:
-		value = 0
-		print('stop motor 1')
-		roboclaw.BackwardM1(address1, value)
-		print('stop motor 2')
-		roboclaw.BackwardM2(address1, value)
-		print('stop motor 3')
-		roboclaw.BackwardM1(address2, value)
-		print('stop motor 4')
-		roboclaw.BackwardM2(address2, value)
-		print('stop motor 5')
-		roboclaw.BackwardM1(address3, value)
-		print('stop motor 6')
-		roboclaw.BackwardM2(address3, value)
+		roboclaw.BackwardM1(address[1], 0)
+		roboclaw.BackwardM2(address[1], 0)
+		roboclaw.BackwardM1(address[2], 0)
+		roboclaw.BackwardM2(address[2], 0)
+		roboclaw.BackwardM1(address[3], 0)
+		roboclaw.BackwardM2(address[3], 0)
 
 queue = Queue()
-txt_speed = 128
-txt_turn = 0
-args = {
-	'drive': ('txt_speed',)
-}
-
-def get_events(data):
-	if data == 'stop': return data
-	data = data.split('|')
-	return ({args[0]: args[1:]} for args in (command.split() for command in data))
 
 def loop():
 	global connection
@@ -194,14 +192,17 @@ def loop():
 						queue.append(event)
 
 				else:
-					speed = int(data[4:12], 2) // 2
+					speed = int(data[4:12], 2)
 					steering = int(data[12:20], 2)
-					print('Raw data: ' + str(data))
 					print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
 					if data[0] == '1': drive(speed)
 					elif data[2] == '1': reverse(speed)
-					elif data[1] == '1': turn_left(speed)
-					elif data[3] == '1': turn_right(speed)
+					elif data[1] == '1':
+						if tank_controls: turn_left(steering)
+						else: turn_left_steering(steering)
+					elif data[3] == '1':
+						if tank_controls: turn_right(steering)
+						else: turn_right_steering(steering)
 					else: stop()
 
 			if text_controls:
