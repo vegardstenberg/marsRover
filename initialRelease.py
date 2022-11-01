@@ -201,8 +201,10 @@ class Slider(Texture): # carbonara
 
 def send_data(bitlist, is_string=False):
     if not is_string: bitstring = ''.join(bitlist)
+    print("test")
     print(bitstring)
     bitstring = f'&{bitstring}&'.encode('utf-8')
+    print(bitstring)
     if connect_query == 'y':
         inter.sendall(bitstring)
 
