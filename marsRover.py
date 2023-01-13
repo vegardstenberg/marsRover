@@ -100,12 +100,17 @@ def setup(ip=c.pi_ip):
 def drive(speed):
 	print('drive')
 	if not local_testing:
-		roboclaw.ForwardM1(address[1], speed)
-		roboclaw.ForwardM2(address[1], speed)
-		roboclaw.ForwardM1(address[2], speed)
-		roboclaw.ForwardM2(address[2], speed)
-		roboclaw.ForwardM1(address[3], speed)
-		roboclaw.ForwardM2(address[3], speed)
+	#	roboclaw.ForwardM1(address[1], speed)
+	#	roboclaw.ForwardM2(address[1], -speed)
+	#	roboclaw.ForwardM1(address[2], speed)
+	#	roboclaw.ForwardM2(address[2], -speed)
+	#	roboclaw.ForwardM1(address[3], speed)
+	#	roboclaw.ForwardM2(address[3], -speed)
+	#	roboclaw.
+	roboclaw.SpeedM1M2(address[1], speed, -speed)
+	roboclaw.SpeedM1M2(address[2], speed, -speed)
+	roboclaw.SpeedM1M2(address[3], speed, -speed)
+
 
 def reverse(speed):
 	print('reverse')
