@@ -112,7 +112,7 @@ def drive(speed):
 		roboclaw.SpeedM1(address[2], speed)
 		roboclaw.SpeedM2(address[2], speed)
 		roboclaw.SpeedM1(address[3], speed)
-		roboclaw.SpeedM2(address[3], speed)
+		roboclaw.SpeedM2(address[3], speed) #comment
 
 
 def reverse(speed):
