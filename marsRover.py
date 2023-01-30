@@ -232,7 +232,9 @@ def loop():
 
 def close():
 	print("Stopping")
-	
+	inter.shutdown()
+	sleep(2)
+	inter.close()
 	if 'connecton' in globals().keys(): connection.close()
 
 if __name__ == '__main__':
