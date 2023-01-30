@@ -53,6 +53,7 @@ class Events:
 	class SetTurnspeedEvent(SetupEvent):
 		def __init__(self, turning):
 			self.turning = turning
+			print("Turnspeed": self.turning)
 
 		def run(self):
 			print(('SetTurnSpeed', self.turning))
@@ -129,6 +130,7 @@ def reverse(speed):
 def turn_left(turning):
 	print('turn left')
 	if not local_testing:
+		print("Turnspeed": self.turning)
 		roboclaw.ForwardM2(address[1], turning)
 		roboclaw.BackwardM1(address[1], turning)
 		roboclaw.ForwardM2(address[2], turning)
@@ -148,6 +150,7 @@ def turn_left_steering(speed):
 def turn_right(turning):
 	print('turn right')
 	if not local_testing:
+		print("Turnspeed": self.turning)
 		roboclaw.ForwardM1(address[1], turning)
 		roboclaw.BackwardM2(address[1], turning)
 		roboclaw.ForwardM1(address[2], turning)
