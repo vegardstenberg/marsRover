@@ -58,7 +58,7 @@ class Events:
 
 		def run(self):
 			print(('SetTurnSpeed', self.turning))
-			return ('turnspeed', self.turning)
+			return ('turning', self.turning)
 
 class Queue(list):
 	def __init__(self):
