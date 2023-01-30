@@ -241,7 +241,6 @@ def close():
 	inter.shutdown()
 	sleep(2)
 	inter.close()
-	roboclaw.
 	if 'connecton' in globals().keys(): connection.close()
 
 if __name__ == '__main__':
