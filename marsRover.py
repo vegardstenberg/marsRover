@@ -105,7 +105,6 @@ def setup(ip=c.pi_ip):
 
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
-	roboclaw.Close()
 
 def drive(speed):
 	print('drive')
