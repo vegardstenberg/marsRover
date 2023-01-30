@@ -12,10 +12,17 @@ roboclaw = Roboclaw("/dev/ttyS0", 38400)
 roboclaw.Open()
 
 if __name__ == "__main__":
+	print("init")
 	roboclaw.ForwardM1(address[1], 64)
+	print("forward 1")
 	roboclaw.ForwardM2(address[1], 64)
+	print("forward 2")
 	roboclaw.ForwardM1(address[2], 64)
+	print("middle 1")
 	roboclaw.ForwardM2(address[2], 64)
+	print("middle 2")
 	roboclaw.ForwardM1(address[3], 64)
+	print("back 1")
 	roboclaw.ForwardM2(address[3], 64)
+	print("back 2")
 
