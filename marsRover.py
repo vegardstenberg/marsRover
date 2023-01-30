@@ -130,7 +130,7 @@ def reverse(speed):
 def turn_left(turning):
 	print('turn left')
 	if not local_testing:
-		print("Turnspeed": self.turning)
+		print("Turnspeed"+turning)
 		roboclaw.ForwardM2(address[1], turning)
 		roboclaw.BackwardM1(address[1], turning)
 		roboclaw.ForwardM2(address[2], turning)
@@ -150,7 +150,7 @@ def turn_left_steering(speed):
 def turn_right(turning):
 	print('turn right')
 	if not local_testing:
-		print("Turnspeed": self.turning)
+		print("Turnspeed"+turning)
 		roboclaw.ForwardM1(address[1], turning)
 		roboclaw.BackwardM2(address[1], turning)
 		roboclaw.ForwardM1(address[2], turning)
