@@ -250,8 +250,8 @@ def fancy_controls():
 
     sliders = {
         'speed': Slider(
-            valrange=(0, 127),
-            default_value=127,
+            valrange=(0, 126),
+            default_value=126,
             increment=1,
             poskeys=pg.K_UP,
             negkeys=pg.K_DOWN,
@@ -260,8 +260,8 @@ def fancy_controls():
             topright=(c.pg_res[0] - c.b_marg, c.b_marg)
         ),
         'keyboard_steering': Slider(
-            valrange=(0, 127),
-            default_value=127,
+            valrange=(0, 126),
+            default_value=126,
             increment=1,
             poskeys=pg.K_RIGHT,
             negkeys=pg.K_LEFT,
@@ -271,7 +271,7 @@ def fancy_controls():
             bottomleft=(c.b_marg, c.pg_res[1] - c.b_marg),
         ),
         'controller_steering': Slider(
-            valrange=(-128, 128),
+            valrange=(-126, 126),
             default_value=0,
             increment=2,
             poskeys=pg.K_RIGHT,

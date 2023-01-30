@@ -53,7 +53,7 @@ class Events:
 class Queue(list):
 	def __init__(self):
 		self.endtime = None
-		self.speed = 127
+		self.speed = 126
 		self.turning = 0
 
 	def append(self, event):
