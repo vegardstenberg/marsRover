@@ -27,12 +27,12 @@ class Events:
 		def run(self, **kwargs):
 			reverse(kwargs['speed'])
 
-	class TurnleftEvent(ActionEvent):
+	class TurnLeftEvent(ActionEvent):
 		def run(self, **kwargs):
 			if tank_controls: turn_left(kwargs['turning'])
 			else: turn_left_steering(kwargs['turning'])
 
-	class TurnrightEvent(ActionEvent):
+	class TurnRightEvent(ActionEvent):
 		def run(self, **kwargs):
 			if tank_controls: turn_right(kwargs['turning'])
 			else: turn_right_steering(kwargs['turning'])
@@ -42,7 +42,7 @@ class Events:
 			stop()
 
 	class SetupEvent(Event): pass
-	class SetspeedEvent(SetupEvent):
+	class SetSpeedEvent(SetupEvent):
 		def __init__(self, speed):
 			self.speed = speed
 
@@ -50,7 +50,7 @@ class Events:
 			print(('SetSpeed', self.speed))
 			return ('speed', self.speed)
 
-	class SetturnspeedEvent(SetupEvent):
+	class SetTurnspeedEvent(SetupEvent):
 		def __init__(self, turning):
 			self.turning = turning
 
@@ -196,7 +196,7 @@ def loop():
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('|')):
 						command = [arg.strip(' ') for arg in command.split(',')]
-						event_type = getattr(Events, command[0].title().replace(" ", "") + 'Event')
+						event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
 						event = event_type(int(command[1]))
 						queue.append(event)
 
