@@ -129,12 +129,13 @@ def reverse(speed):
 def turn_left(speed):
 	print('turn left')
 	if not local_testing:
-		roboclaw.ForwardM1(address[1], speed)
-		roboclaw.BackwardM2(address[1], speed)
-		roboclaw.ForwardM1(address[2], speed)
-		roboclaw.BackwardM2(address[2], speed)
-		roboclaw.ForwardM1(address[3], speed)
-		roboclaw.BackwardM2(address[3], speed)
+		roboclaw.ForwardM2(address[1], speed)
+		roboclaw.BackwardM1(address[1], speed)
+		roboclaw.ForwardM2(address[2], speed)
+		roboclaw.BackwardM1(address[2], speed)
+		roboclaw.ForwardM2(address[3], speed)
+		roboclaw.BackwardM1(address[3], speed)
+
 
 def turn_left_steering(speed):
 	print('turn left (steering)')
@@ -147,12 +148,13 @@ def turn_left_steering(speed):
 def turn_right(speed):
 	print('turn right')
 	if not local_testing:
-		roboclaw.ForwardM2(address[1], speed)
-		roboclaw.BackwardM1(address[1], speed)
-		roboclaw.ForwardM2(address[2], speed)
-		roboclaw.BackwardM1(address[2], speed)
-		roboclaw.ForwardM2(address[3], speed)
-		roboclaw.BackwardM1(address[3], speed)
+		roboclaw.ForwardM1(address[1], speed)
+		roboclaw.BackwardM2(address[1], speed)
+		roboclaw.ForwardM1(address[2], speed)
+		roboclaw.BackwardM2(address[2], speed)
+		roboclaw.ForwardM1(address[3], speed)
+		roboclaw.BackwardM2(address[3], speed)
+
 
 def turn_right_steering(speed):
 	print('turn right (steering)')
