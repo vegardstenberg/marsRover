@@ -53,7 +53,7 @@ class Events:
 	class SetTurnspeedEvent(SetupEvent):
 		def __init__(self, turning):
 			self.turning = turning
-			print("Turnspeed": self.turning)
+			print("Turnspeed"+ self.turning)
 
 		def run(self):
 			print(('SetTurnSpeed', self.turning))
@@ -105,6 +105,7 @@ def setup(ip=c.pi_ip):
 
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
+	roboclaw.Close()
 
 def drive(speed):
 	print('drive')
@@ -240,6 +241,7 @@ def close():
 	inter.shutdown()
 	sleep(2)
 	inter.close()
+	roboclaw.
 	if 'connecton' in globals().keys(): connection.close()
 
 if __name__ == '__main__':
