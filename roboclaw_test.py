@@ -1,4 +1,5 @@
 from roboclaw import Roboclaw
+from time import sleep
 
 address = {
 		1: 0x80, #front motors
@@ -12,6 +13,15 @@ roboclaw = Roboclaw("/dev/ttyS0", 38400)
 roboclaw.Open()
 
 if __name__ == "__main__":
+    
+	roboclaw.BackwardM1(address[1], 0)
+	roboclaw.BackwardM2(address[1], 0)
+	roboclaw.BackwardM1(address[2], 0)
+	roboclaw.BackwardM2(address[2], 0)
+	roboclaw.BackwardM1(address[3], 0)
+	roboclaw.BackwardM2(address[3], 0)
+	sleep(2)
+    
 	print("init")
 	roboclaw.ForwardM1(address[1], 64)
 	print("forward 1")
