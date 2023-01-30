@@ -1,6 +1,7 @@
 from roboclaw import Roboclaw
 from time import sleep
 
+speed = 127
 address = {
 		1: 0x80, #front motors
 		2: 0x81, #mid motors
@@ -35,4 +36,12 @@ if __name__ == "__main__":
 	print("back 1")
 	roboclaw.ForwardM2(address[3], 64)
 	print("back 2")
+	sleep(5)
+	
+	roboclaw.BackwardM1(address[1], speed)
+	roboclaw.BackwardM2(address[1], speed)
+	roboclaw.BackwardM1(address[2], speed)
+	roboclaw.BackwardM2(address[2], speed)
+	roboclaw.ForwardM1(address[3], speed)
+	roboclaw.ForwardM2(address[3], speed)
 
