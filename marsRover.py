@@ -101,11 +101,11 @@ def drive(speed):
 	print('drive')
 	if not local_testing:
 		roboclaw.ForwardM1(address[1], speed)
-		roboclaw.ForwardM2(address[1], speed)
+		roboclaw.ForwardM2(address[1], -speed)
 		roboclaw.ForwardM1(address[2], speed)
-		roboclaw.ForwardM2(address[2], speed)
+		roboclaw.ForwardM2(address[2], -speed)
 		roboclaw.ForwardM1(address[3], speed)
-		roboclaw.ForwardM2(address[3], speed)
+		roboclaw.ForwardM2(address[3], -speed)
 
 
 def reverse(speed):
@@ -115,8 +115,8 @@ def reverse(speed):
 		roboclaw.BackwardM2(address[1], speed)
 		roboclaw.BackwardM1(address[2], speed)
 		roboclaw.BackwardM2(address[2], speed)
-		roboclaw.BackwardM1(address[3], speed)
-		roboclaw.BackwardM2(address[3], speed)
+		roboclaw.ForwardM1(address[3], -speed)
+		roboclaw.ForwardM2(address[3], -speed)
 
 def turn_left(speed):
 	print('turn left')
