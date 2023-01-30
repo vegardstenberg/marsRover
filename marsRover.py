@@ -27,12 +27,12 @@ class Events:
 		def run(self, **kwargs):
 			reverse(kwargs['speed'])
 
-	class TurnLeftEvent(ActionEvent):
+	class TurnleftEvent(ActionEvent):
 		def run(self, **kwargs):
 			if tank_controls: turn_left(kwargs['turning'])
 			else: turn_left_steering(kwargs['turning'])
 
-	class TurnRightEvent(ActionEvent):
+	class TurnrightEvent(ActionEvent):
 		def run(self, **kwargs):
 			if tank_controls: turn_right(kwargs['turning'])
 			else: turn_right_steering(kwargs['turning'])
@@ -50,11 +50,19 @@ class Events:
 			print(('SetSpeed', self.speed))
 			return ('speed', self.speed)
 
+	class SetturnspeedEvent(SetupEvent):
+		def __init__(self, turning):
+			self.turning = turning
+
+		def run(self):
+			print(('SetTurnSpeed', self.turning))
+			return ('turnspeed', self.turning)
+
 class Queue(list):
 	def __init__(self):
 		self.endtime = None
 		self.speed = 126
-		self.turning = 0
+		self.turning = 126
 
 	def append(self, event):
 		event.runtime = self.endtime if self.endtime else now
@@ -224,6 +232,7 @@ def loop():
 
 def close():
 	print("Stopping")
+	
 	if 'connecton' in globals().keys(): connection.close()
 
 if __name__ == '__main__':
