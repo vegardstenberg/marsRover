@@ -241,6 +241,7 @@ def loop():
 def close():
 	print("Stopping")
 	socket.socket.close()
+	inter.detach()
 	inter.shutdown()
 	sleep(2)
 	inter.close()

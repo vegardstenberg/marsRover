@@ -210,9 +210,9 @@ def send_data(bitlist, is_string=False):
 
 def text_controls():
     print('Text controlls activated')
-    command_list = ('help', 'drive', 'reverse', 'turn', 'set_speed', 'get_speed', 'set_turn', 'get_turn', 'stop')
+    command_list = ('help', 'drive', 'reverse', 'turn right', 'turn left', 'set speed', 'get_speed', 'set turnspeed', 'get_turn', 'stop')
     while True:
-        print('Available commands: HELP, DRIVE, REVERSE, TURN LEFT, TURN RIGHT')
+        print('Available commands: HELP, DRIVE, REVERSE, TURN LEFT, TURN RIGHT, SET SPEED, SET TURNSPEED')
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
         send_data(f'1{commands}')
 
