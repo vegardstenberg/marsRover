@@ -96,4 +96,6 @@ while True: # Here is the improved code
     time.sleep(0.1)
 
 # ! Future implementation would most likely be to give it a certain area based on coordinates to drive.
-# ! I've based this entire code off of how a robot cleaner does its job.
+# ! I've based this entire code off of how a robot cleaner does its job
+## I did some research into how self driving cars work, and a recomended type of sensor would be LIDAR sensors.
+## Enviormental sensoring would also be suitable for a mars rover
