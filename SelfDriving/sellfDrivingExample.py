@@ -69,7 +69,7 @@ while True:
 # Define the main loop for 2 sensors
 while True: # Here is the improved code
     # Read the state of the sensors
-    left_sensor, right_sensor = read_sensors()
+    left_sensor, right_sensor = read_distance()
     
     # If both sensors detect an obstacle, stop and turn around
     if left_sensor and right_sensor:
