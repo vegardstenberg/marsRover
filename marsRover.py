@@ -92,7 +92,6 @@ def setup(ip=c.pi_ip):
 	global roboclaw
  
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	inter.close((ip, 8080))
 
 	inter.bind((ip, 8080))
 	inter.listen(5)
@@ -188,6 +187,7 @@ def loop():
 	global now
 	while True:
 		try:
+			connection.close()
 			connection = inter.accept()[0]
 			connection.setblocking(0)
 		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
