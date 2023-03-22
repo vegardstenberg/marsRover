@@ -244,8 +244,6 @@ def loop():
 def close():
 	print("Stopping")
 	socket.socket.close()
-	inter.shutdown((c.pi_ip, 8080))
-	inter.
 	sleep(2)
 	if 'connecton' in globals().keys(): connection.close()
 
