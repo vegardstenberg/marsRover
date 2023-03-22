@@ -187,7 +187,6 @@ def loop():
 	global now
 	while True:
 		try:
-			connection.close()
 			connection = inter.accept()[0]
 			connection.setblocking(0)
 		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
