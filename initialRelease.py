@@ -291,7 +291,9 @@ def fancy_controls():
         screen.blit(cam_frame, dest=buttons['a'].rect.bottomleft)
 
         for event in pg.event.get():
-            if event.type == pg.QUIT: exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
+            if event.type == pg.QUIT: 
+                inter.close()
+                exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
             elif joystick and event.type == pg.JOYAXISMOTION and event.axis < 2:
                 axis_input[event.axis] = event.value if abs(event.value) > 0.2 else 0
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:

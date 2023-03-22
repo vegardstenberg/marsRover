@@ -90,6 +90,9 @@ def setup(ip=c.pi_ip):
 	global inter
 	global address
 	global roboclaw
+	inter.detach((ip, 8080))
+	inter.close((ip, 8080))
+	inter.shutdown((ip, 8080))
 
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -242,9 +245,9 @@ def close():
 	print("Stopping")
 	socket.socket.close()
 	inter.detach()
+	inter.close()
 	inter.shutdown()
 	sleep(2)
-	inter.close()
 	if 'connecton' in globals().keys(): connection.close()
 
 if __name__ == '__main__':
