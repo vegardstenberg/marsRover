@@ -91,8 +91,8 @@ def setup(ip=c.pi_ip):
 	global address
 	global roboclaw
  
-	socket.socket.close(socket.AF_INET, socket.SOCK_STREAM)
 	inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	inter.close((ip, 8080))
 
 	inter.bind((ip, 8080))
 	inter.listen(5)
