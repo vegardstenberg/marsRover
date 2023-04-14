@@ -12,7 +12,7 @@ socket.setdefaulttimeout(10)
 tank_controls = True
 
 def run_script_on_exit():
-    subprocess.call(['/path/to/script.sh'])
+    subprocess.call(['/path/to/KillProcess.sh'])
 
 atexit.register(run_script_on_exit)
 
