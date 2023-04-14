@@ -247,7 +247,6 @@ def loop():
 
 def close():
 	print("Stopping")
-	socket.socket.close()
 	sleep(2)
 	if 'connecton' in globals().keys(): connection.close()
 	subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
