@@ -7,8 +7,14 @@ import constants as c
 from datetime import datetime as dt, timedelta as td
 from time import sleep
 import subprocess
+import atexit
 socket.setdefaulttimeout(10)
 tank_controls = True
+
+def run_script_on_exit():
+    subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
+
+atexit.register(run_script_on_exit)
 
 class Event:
 	def __init__(self, duration=0):
@@ -253,12 +259,12 @@ if __name__ == '__main__':
 		setup()
 		print('Setup completed with default ip')
 	except:
-		retry_query = input('Setup failed. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n  3. Kill Processes\n  4. Exit\nResponse: ')
+		retry_query = input('Setup failed. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n  3. Exit\nResponse: ')
 		while True:
 			if retry_query.isdigit() and 1 <= int(retry_query) <= 4:
 				retry_query = int(retry_query)
 				break
-			retry_query = input('Invalid response. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n 3. Kill Processes\n  4. Exit\nResponse: ')
+			retry_query = input('Invalid response. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n  3. Exit\nResponse: ')
 		if retry_query == 1:
 			new_ip = input('Enter new ip address: ')
 			setup(ip=new_ip)
@@ -267,8 +273,6 @@ if __name__ == '__main__':
 			setup(ip='localhost')
 			local_testing = True
 			print('Setup completed in local test environment. Running without motors')
-		elif retry_query == 3:
-			subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
 		else: exit()
 	print("Running")
 	try: loop()
