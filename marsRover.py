@@ -6,15 +6,9 @@ from roboclaw import Roboclaw
 import constants as c
 from datetime import datetime as dt, timedelta as td
 from time import sleep
-import atexit
 import subprocess
 socket.setdefaulttimeout(10)
 tank_controls = True
-
-def run_script_on_exit():
-    subprocess.call(['/path/to/KillProcess'])
-
-atexit.register(run_script_on_exit)
 
 class Event:
 	def __init__(self, duration=0):
@@ -247,6 +241,7 @@ def loop():
 
 def close():
 	print("Stopping")
+	subprocess.call(['/path/to/KillProcess'])
 	socket.socket.close()
 	sleep(2)
 	if 'connecton' in globals().keys(): connection.close()
