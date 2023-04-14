@@ -241,7 +241,7 @@ def loop():
 
 def close():
 	print("Stopping")
-	subprocess.call(['~/Desktop/marsRover/KillProcess.sh'])
+	subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
 	socket.socket.close()
 	sleep(2)
 	if 'connecton' in globals().keys(): connection.close()
@@ -253,7 +253,7 @@ if __name__ == '__main__':
 		setup()
 		print('Setup completed with default ip')
 	except:
-		retry_query = input('Setup failed. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n 3. Kill Processes\n  4. Exit\nResponse: ')
+		retry_query = input('Setup failed. Do you want to...\n  1. Retry with different ip\n  2. Run local testing\n  3. Kill Processes\n  4. Exit\nResponse: ')
 		while True:
 			if retry_query.isdigit() and 1 <= int(retry_query) <= 4:
 				retry_query = int(retry_query)
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 			local_testing = True
 			print('Setup completed in local test environment. Running without motors')
 		elif retry_query == 3:
-			subprocess.call(['~/Desktop/marsRover/KillProcess.sh'])
+			subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
 		else: exit()
 	print("Running")
 	try: loop()
