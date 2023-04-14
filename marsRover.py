@@ -247,10 +247,11 @@ def loop():
 
 def close():
 	print("Stopping")
-	subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
 	socket.socket.close()
 	sleep(2)
 	if 'connecton' in globals().keys(): connection.close()
+	subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
+
 
 if __name__ == '__main__':
 	global local_testing
