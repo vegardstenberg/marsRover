@@ -5,7 +5,7 @@ PID=$(pgrep -f "python3.5")
 # Kill the process if it exists
 if [ -n "$PID" ]; then
     kill $PID
-    echo "Process python3.5 marsRover.py killed."
+    echo "Process $PID killed."
 else
-    echo "Process python3.5 marsRover.py not found."
+    echo "Process not found."
 fi
