@@ -1,5 +1,11 @@
-ps aux | grep python
-echo Take process value for marsRover.py
-echo enter it bellow:
-read process
-kill -9 $process
+#!/bin/bash
+# Find the process ID of python3.5 marsRover.py
+PID=$(pgrep -f "python3.5 marsRover.py")
+
+# Kill the process if it exists
+if [ -n "$PID" ]; then
+    kill $PID
+    echo "Process python3.5 marsRover.py killed."
+else
+    echo "Process python3.5 marsRover.py not found."
+fi
