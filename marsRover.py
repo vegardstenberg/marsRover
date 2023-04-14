@@ -6,8 +6,15 @@ from roboclaw import Roboclaw
 import constants as c
 from datetime import datetime as dt, timedelta as td
 from time import sleep
+import atexit
+import subprocess
 socket.setdefaulttimeout(10)
 tank_controls = True
+
+def run_script_on_exit():
+    subprocess.call(['/path/to/script.sh'])
+
+atexit.register(run_script_on_exit)
 
 class Event:
 	def __init__(self, duration=0):
