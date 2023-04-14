@@ -1,0 +1,5 @@
+ps aux | grep python
+echo Take process value for marsRover.py
+echo enter it bellow:
+read process
+kill -9 $process

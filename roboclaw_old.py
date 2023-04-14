@@ -104,8 +104,6 @@ class Roboclaw:
 		GETM2MAXCURRENT = 136
 		SETPWMMODE = 148
 		GETPWMMODE = 149
-		READEEPROM = 252
-		WRITEEEPROM = 253
 		FLAGBOOTLOADER = 255
 
 	#Private Functions
@@ -125,18 +123,15 @@ class Roboclaw:
 	def _sendcommand(self,address,command):
 		self.crc_clear()
 		self.crc_update(address)
-#		self._port.write(chr(address))
-		self._port.write(address.to_bytes(1, 'big'))
+		self._port.write(chr(address).encode())
 		self.crc_update(command)
-#		self._port.write(chr(command))
-		self._port.write(command.to_bytes(1, 'big'))
+		self._port.write(chr(command).encode())
 		return
 
 	def _readchecksumword(self):
 		data = self._port.read(2)
 		if len(data)==2:
-#			crc = (ord(data[0])<<8) | ord(data[1])
-			crc = (data[0]<<8) | data[1]
+			crc = (ord(data[0])<<8) | ord(data[1])
 			return (1,crc)
 		return (0,0)
 
@@ -178,8 +173,7 @@ class Roboclaw:
 
 	def _writebyte(self,val):
 		self.crc_update(val&0xFF)
-#		self._port.write(chr(val&0xFF))
-		self._port.write(val.to_bytes(1, 'big'))
+		self._port.write(chr(val&0xFF).encode())
 
 	def _writesbyte(self,val):
 		self._writebyte(val)
@@ -297,6 +291,7 @@ class Roboclaw:
 	def _writechecksum(self):
 		self._writeword(self._crc&0xFFFF)
 		val = self._readbyte()
+		print(val)
 		if(len(val)>0):
 			if val[0]:
 				return True
@@ -646,8 +641,7 @@ class Roboclaw:
 	def SendRandomData(self,cnt):
 		for i in range(0,cnt):
 			byte = random.getrandbits(8)
-#			self._port.write(chr(byte))
-			self._port.write(byte.to_bytes(1, 'big'))
+			self._port.write(chr(byte).encode())
 		return
 
 	def ForwardM1(self,address,val):
@@ -721,8 +715,7 @@ class Roboclaw:
 					self.crc_update(val)
 					if(val==0):
 						break
-#					str+=data[0]
-					str+=chr(data[0])
+					str+=data[0]
 				else:
 					passed = False
 					break
@@ -757,12 +750,10 @@ class Roboclaw:
 		return self._write1(address,self.Cmd.SETMAXLB,val)
 
 	def SetM1VelocityPID(self,address,p,i,d,qpps):
-#		return self._write4444(address,self.Cmd.SETM1PID,long(d*65536),long(p*65536),long(i*65536),qpps)
-		return self._write4444(address,self.Cmd.SETM1PID,d*65536,p*65536,i*65536,qpps)
+		return self._write4444(address,self.Cmd.SETM1PID,long(d*65536),long(p*65536),long(i*65536),qpps)
 
 	def SetM2VelocityPID(self,address,p,i,d,qpps):
-#		return self._write4444(address,self.Cmd.SETM2PID,long(d*65536),long(p*65536),long(i*65536),qpps)
-		return self._write4444(address,self.Cmd.SETM2PID,d*65536,p*65536,i*65536,qpps)
+		return self._write4444(address,self.Cmd.SETM2PID,long(d*65536),long(p*65536),long(i*65536),qpps)
 
 	def ReadISpeedM1(self,address):
 		return self._read4_1(address,self.Cmd.GETM1ISPEED)
@@ -771,10 +762,10 @@ class Roboclaw:
 		return self._read4_1(address,self.Cmd.GETM2ISPEED)
 
 	def DutyM1(self,address,val):
-		return self._writeS2(address,self.Cmd.M1DUTY,val)
+		return self._simplFunctionS2(address,self.Cmd.M1DUTY,val)
 
 	def DutyM2(self,address,val):
-		return self._writeS2(address,self.Cmd.M2DUTY,val)
+		return self._simplFunctionS2(address,self.Cmd.M2DUTY,val)
 
 	def DutyM1M2(self,address,m1,m2):
 		return self._writeS2S2(address,self.Cmd.MIXEDDUTY,m1,m2)
@@ -858,7 +849,7 @@ class Roboclaw:
 		return self._writeS24(address,self.Cmd.M2DUTYACCEL,duty,accel)
 
 	def DutyAccelM1M2(self,address,accel1,duty1,accel2,duty2):
-		return self._writeS24S24(address,self.Cmd.MIXEDDUTYACCEL,duty1,accel1,duty2,accel2)
+		return self._writeS24S24(self.Cmd.MIXEDDUTYACCEL,duty1,accel1,duty2,accel2)
 
 	def ReadM1VelocityPID(self,address):
 		data = self._read_n(address,self.Cmd.READM1PID,4)
@@ -901,12 +892,10 @@ class Roboclaw:
 		return (0,0,0)
 
 	def SetM1PositionPID(self,address,kp,ki,kd,kimax,deadzone,min,max):
-#		return self._write4444444(address,self.Cmd.SETM1POSPID,long(kd*1024),long(kp*1024),long(ki*1024),kimax,deadzone,min,max)
-		return self._write4444444(address,self.Cmd.SETM1POSPID,kd*1024,kp*1024,ki*1024,kimax,deadzone,min,max)
+		return self._write4444444(address,self.Cmd.SETM1POSPID,long(kd*1024),long(kp*1024),long(ki*1024),kimax,deadzone,min,max)
 
 	def SetM2PositionPID(self,address,kp,ki,kd,kimax,deadzone,min,max):
-#		return self._write4444444(address,self.Cmd.SETM2POSPID,long(kd*1024),long(kp*1024),long(ki*1024),kimax,deadzone,min,max)
-		return self._write4444444(address,self.Cmd.SETM2POSPID,kd*1024,kp*1024,ki*1024,kimax,deadzone,min,max)
+		return self._write4444444(address,self.Cmd.SETM2POSPID,long(kd*1024),long(kp*1024),long(ki*1024),kimax,deadzone,min,max)
 
 	def ReadM1PositionPID(self,address):
 		data = self._read_n(address,self.Cmd.READM1POSPID,7)
@@ -984,7 +973,7 @@ class Roboclaw:
 		return self._read2(address,self.Cmd.GETTEMP2)
 
 	def ReadError(self,address):
-		return self._read4(address,self.Cmd.GETERROR)
+		return self._read2(address,self.Cmd.GETERROR)
 
 	def ReadEncoderModes(self,address):
 		val = self._read2(address,self.Cmd.GETENCODERMODE)
@@ -1038,40 +1027,6 @@ class Roboclaw:
 
 	def ReadPWMMode(self,address):
 		return self._read1(address,self.Cmd.GETPWMMODE)
-
-	def ReadEeprom(self,address,ee_address):
-		trys = self._trystimeout
-		while 1:
-			self._port.flushInput()
-			self._sendcommand(address,self.Cmd.READEEPROM)
-			self.crc_update(ee_address)
-			self._port.write(chr(ee_address))
-			val1 = self._readword()
-			if val1[0]:
-				crc = self._readchecksumword()
-				if crc[0]:
-					if self._crc&0xFFFF!=crc[1]&0xFFFF:
-						return (0,0)
-					return (1,val1[1])
-			trys-=1
-			if trys==0:
-				break
-		return (0,0)
-
-	def WriteEeprom(self,address,ee_address,ee_word):
-		retval = self._write111(address,self.Cmd.WRITEEEPROM,ee_address,ee_word>>8,ee_word&0xFF)
-		if retval==True:
-			trys = self._trystimeout
-			while 1:
-				self._port.flushInput()
-				val1 = self._readbyte()
-				if val1[0]:
-					if val1[1]==0xaa:
-						return True
-				trys-=1
-				if trys==0:
-					break
-		return False
 
 	def Open(self):
 		try:

@@ -3,7 +3,7 @@ import pygame
 import numpy as np
 import sys as sus
 
-#0 Is the built in camera
+#0 Is the built in camera.
 cap = cv2.VideoCapture(0)
 #Gets fps of your camera
 fps = cap.get(cv2.CAP_PROP_FPS)

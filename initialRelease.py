@@ -6,7 +6,6 @@ Created on Thu Sep  3 11:27:40 2020
 """
 # uh
 # ! CAMERA SHIT IS BROKEN FORGOT SHIT STREAM SHIT NEED FIX, I'LL FIX BUT NEED SHIT RASPBERRY SHITT CANERA TRANSFER STREAM INSTEAD; IF RAN IT WOULD USE LAPTOP CAMERA BECAUSE SHIT SHIT IM STUPID
-# TODO FANCY CONTROLLS LOOK LIKE SHIT TRIED TO FIND OUT HOW TO ROUND EDGES OF RECTANGELS BUT COULDN'T FIX BECAUSE NOODLE
 
 import socket
 import os
@@ -119,6 +118,10 @@ class Button(Texture):
             _blit.blit(tx.tx, tx.rect.topleft)
         return _blit
 
+    def round_edges(self, round):
+        super().round_edges(round)
+
+
 class Slider(Texture): # carbonara
     def __init__(self, valrange, default_value, increment, poskeys, negkeys, border=c.b_marg, border_color=(255, 255, 255), bg_color=(0, 0, 0), slider_tx={'tx': 'textures/gradient.png'}, horizontal=False, reverse=False, size_includes_border=False, visible=True, **pos):
         if valrange[1] - valrange[0] < 0:
@@ -198,16 +201,18 @@ class Slider(Texture): # carbonara
 
 def send_data(bitlist, is_string=False):
     if not is_string: bitstring = ''.join(bitlist)
+    print("test")
     print(bitstring)
     bitstring = f'&{bitstring}&'.encode('utf-8')
+    print(bitstring)
     if connect_query == 'y':
         inter.sendall(bitstring)
 
 def text_controls():
     print('Text controlls activated')
-    command_list = ('help', 'drive', 'reverse', 'turn', 'set_speed', 'get_speed', 'set_turn', 'get_turn', 'stop')
+    command_list = ('help', 'drive', 'reverse', 'turn right', 'turn left', 'set speed', 'get_speed', 'set turnspeed', 'get_turn', 'stop')
     while True:
-        print('Available commands: HELP, DRIVE, REVERSE, TURN LEFT, TURN RIGHT')
+        print('Available commands: HELP, DRIVE, REVERSE, TURN LEFT, TURN RIGHT, SET SPEED, SET TURNSPEED')
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
         send_data(f'1{commands}')
 
@@ -240,14 +245,14 @@ def fancy_controls():
             y=c.b_marg if light_index == 0 else 2 * c.b_marg + c.b_size, #Button margin y-axis
             width=c.b_size, #button width
             height=c.b_size #Button height
-        ).round_edges(10)
+        )
     for light_index, letter in enumerate('wasd')}
 
     sliders = {
         'speed': Slider(
-            valrange=(0, 255),
-            default_value=255,
-            increment=2,
+            valrange=(0, 126),
+            default_value=126,
+            increment=1,
             poskeys=pg.K_UP,
             negkeys=pg.K_DOWN,
             size_includes_border=True,
@@ -255,9 +260,9 @@ def fancy_controls():
             topright=(c.pg_res[0] - c.b_marg, c.b_marg)
         ),
         'keyboard_steering': Slider(
-            valrange=(0, 255),
-            default_value=255,
-            increment=2,
+            valrange=(0, 126),
+            default_value=126,
+            increment=1,
             poskeys=pg.K_RIGHT,
             negkeys=pg.K_LEFT,
             horizontal=True,
@@ -266,7 +271,7 @@ def fancy_controls():
             bottomleft=(c.b_marg, c.pg_res[1] - c.b_marg),
         ),
         'controller_steering': Slider(
-            valrange=(-128, 128),
+            valrange=(-126, 126),
             default_value=0,
             increment=2,
             poskeys=pg.K_RIGHT,
@@ -286,7 +291,9 @@ def fancy_controls():
         screen.blit(cam_frame, dest=buttons['a'].rect.bottomleft)
 
         for event in pg.event.get():
-            if event.type == pg.QUIT: exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
+            if event.type == pg.QUIT: 
+                inter.close()
+                exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
             elif joystick and event.type == pg.JOYAXISMOTION and event.axis < 2:
                 axis_input[event.axis] = event.value if abs(event.value) > 0.2 else 0
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
