@@ -241,7 +241,7 @@ def loop():
 
 def close():
 	print("Stopping")
-	subprocess.call(['/path/to/KillProcess'])
+	subprocess.call(['~/Desktop/marsRover/KillProcess.sh'])
 	socket.socket.close()
 	sleep(2)
 	if 'connecton' in globals().keys(): connection.close()
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 			local_testing = True
 			print('Setup completed in local test environment. Running without motors')
 		elif retry_query == 3:
-			subprocess.call(['/path/to/KillProcess.sh'])
+			subprocess.call(['~/Desktop/marsRover/KillProcess.sh'])
 		else: exit()
 	print("Running")
 	try: loop()
