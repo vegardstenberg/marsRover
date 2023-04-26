@@ -159,8 +159,10 @@ def turn_left(turning):
 
 def turn_left_steering(speed, radius):
 	print('turn left (steering)')
-	print(f'radius: ' + radius)
-	print(f'speed: ' + speed)
+	print('radius:')
+	print(radius)
+	print('speed:')
+	print(speed)
 	if not local_testing:
 		roboclaw.ForwardM1(address[4], speed)
 		roboclaw.ForwardM2(address[4], speed)
