@@ -44,11 +44,11 @@ class Events:
 			if tank_controls: turn_right(kwargs['turning'])
 			else: turn_right_steering(kwargs['turning'])
    
-	class steerLeftEvent(ActionEvent):
+	class SteerLeftEvent(ActionEvent):
 		def run(self, speed, radius):
 			turn_left_steering(speed, radius)
 
-	class steerRightEvent(ActionEvent):
+	class SteerRightEvent(ActionEvent):
 		def run(self, speed, radius):
 			turn_right_steering(speed, radius)
 
