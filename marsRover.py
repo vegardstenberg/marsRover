@@ -80,6 +80,7 @@ class Queue(list):
 		self.endtime = None
 		self.speed = 126
 		self.turning = 126
+		self.radius = 0
 
 	def append(self, event):
 		event.runtime = self.endtime if self.endtime else now
@@ -98,7 +99,7 @@ class Queue(list):
 
 	@property
 	def run_kwargs(self):
-		return {'speed': self.speed, 'turning': self.turning}
+		return {'speed': self.speed, 'turning': self.turning, 'radius': self.radius}
 queue = Queue()
 
 def setup(ip=c.pi_ip):
@@ -158,6 +159,8 @@ def turn_left(turning):
 
 def turn_left_steering(speed, radius):
 	print('turn left (steering)')
+	print(f'radius: ' + radius)
+	print(f'speed: ' + speed)
 	if not local_testing:
 		roboclaw.ForwardM1(address[4], speed)
 		roboclaw.ForwardM2(address[4], speed)
