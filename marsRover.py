@@ -48,14 +48,14 @@ class Events:
 		def run(self, **kwargs):
 			print("kwargs:")
 			print(kwargs)
-			print("*kwargs:")
+			"""print("*kwargs:")
 			print(*kwargs)
 			print("**kwargs:")
 			print(**kwargs)
 			print('kwargs speed')
 			print(kwargs['speed'])
 			print('kwargs radius')
-			print(kwargs['radius'])
+			print(kwargs['radius']) """
 			turn_left_steering(kwargs['speed'], kwargs['radius'])
 
 	class SteerRightEvent(ActionEvent):
@@ -91,6 +91,7 @@ class Queue(list):
 		self.speed = 126
 		self.turning = 126
 		self.radius = 0
+		self.duration = 0
 
 	def append(self, event):
 		event.runtime = self.endtime if self.endtime else now
@@ -233,10 +234,22 @@ def loop():
 				data = data[1:]
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('|')):
-						command = [arg.strip(' ') for arg in command.split(',')]
-						event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
-						event = event_type(int(command[1]))
-						queue.append(event)
+						if command.find(',') == -1:
+							for command1 in command.split('-'):
+								if command1.substr(0) == 'r':
+									queue.radius = command1[2:]
+								elif command1.substr(0) == 'd':
+									queue.duration = command1[2:]
+								elif command1.substr(0) == 's':
+									queue.speed = command1[2:]
+								else:
+									event = (command1.substr(0) + 'Event')
+									queue.append(event)
+						else:
+							command = [arg.strip(' ') for arg in command.split(',')]
+							event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
+							event = event_type(int(command[1]))
+							queue.append(event)
 
 				else:
 					speed = int(data[4:12], 2)
