@@ -43,6 +43,14 @@ class Events:
 		def run(self, **kwargs):
 			if tank_controls: turn_right(kwargs['turning'])
 			else: turn_right_steering(kwargs['turning'])
+   
+	class steerLeftEvent(ActionEvent):
+		def run(self, speed, radius):
+			turn_left_steering(speed, radius)
+
+	class steerRightEvent(ActionEvent):
+		def run(self, speed, radius):
+			turn_right_steering(speed, radius)
 
 	class StopEvent(Event):
 		def run(self, **kwargs):
@@ -148,7 +156,7 @@ def turn_left(turning):
 		roboclaw.BackwardM1(address[3], turning)
 
 
-def turn_left_steering(speed):
+def turn_left_steering(speed, radius):
 	print('turn left (steering)')
 	if not local_testing:
 		roboclaw.ForwardM1(address[4], speed)
