@@ -46,7 +46,7 @@ class Events:
    
 	class SteerLeftEvent(ActionEvent):
 		def run(self, **kwargs):
-			turn_left_steering(kwargs['speed'], kwargs['radius'])
+			turn_left_steering(kwargs['speed'], 50)
 
 	class SteerRightEvent(ActionEvent):
 		def run(self, speed, radius):
