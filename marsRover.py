@@ -11,7 +11,7 @@ import atexit
 socket.setdefaulttimeout(10)
 tank_controls = True
 
-def run_script_on_exit():
+def run_script_on_exit(): # we had i litttle bit of oooopsie so we kill :D
     subprocess.call(['/home/pi/Desktop/marsRover/KillProcess'])
 
 atexit.register(run_script_on_exit)
@@ -22,7 +22,7 @@ class Event:
 	def run(self):
 		return
 
-class Events:
+class Events: # i honestly don't know, it works though
 	class ActionEvent(Event):
 		def __init__(self, duration=0):
 			self.duration = td(seconds=duration)
@@ -123,7 +123,7 @@ def setup(ip=c.pi_ip):
 	inter.bind((ip, 8080))
 	inter.listen(5)
 
-	address = {
+	address = { # Stores the addresses of the motorcontrolors
 		1: 0x80, #front motors
 		2: 0x81, #mid motors
 		3: 0x82, #back motors
@@ -217,7 +217,7 @@ def loop():
 	global connection
 	global now
 	while True:
-		try:
+		try: # waits for conection
 			connection = inter.accept()[0]
 			connection.setblocking(0)
 		except socket.timeout: print('Can\'t find a cient-side machine to connect to. Attempting to reconnect...')
@@ -228,13 +228,13 @@ def loop():
 			now = dt.now() #Updates the time on every iteration
 			try: data = connection.recv(4096)
 			except BlockingIOError: data = None
-			if data:
+			if data: # decodes and manipulates the data so that we can make it usefull
 				data = data.decode('utf-8').replace('&&', '&').split('&')[-2]
 				text_controls = int(data[0])
 				data = data[1:]
 				if text_controls:
-					for command in (arg.strip(' ') for arg in data.split('|')):
-						if command.find(',') == -1:
+					for command in (arg.strip(' ') for arg in data.split('|')): #strips and splits the command so that it can accept arguments
+						if command.find('-') == -1:
 							for command1 in command.split('-'):
 								if command1.substr(0) == 'r':
 									queue.radius = command1[2:]
@@ -243,7 +243,7 @@ def loop():
 								elif command1.substr(0) == 's':
 									queue.speed = command1[2:]
 								else:
-									event = (command1.substr(0) + 'Event')
+									event = (command1.substr(0) + 'Event') # makes the "event thing" form earlier
 									queue.append(event)
 						else:
 							command = [arg.strip(' ') for arg in command.split(',')]
@@ -251,11 +251,11 @@ def loop():
 							event = event_type(int(command[1]))
 							queue.append(event)
 
-				else:
+				else: # if using fancy controlls it prints out speed in the terminal
 					speed = int(data[4:12], 2)
 					steering = int(data[12:20], 2)
 					print('Speed: ' + str(speed) + ' | Steering: ' + str(steering))
-					if data[0] == '1': drive(speed)
+					if data[0] == '1': drive(speed) # these accept data and then run drive functions
 					elif data[2] == '1': reverse(speed)
 					elif data[1] == '1':
 						if tank_controls: turn_left(steering)

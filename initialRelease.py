@@ -163,7 +163,7 @@ class Slider(Texture): # carbonara
         self.slider.update_rect(anchor='bottomleft' if reverse else 'topright')
         self.reverse_slider.update_rect(anchor='topright' if reverse else 'bottomleft')
 
-# æ gir opp ass https://upload.wikimedia.org/wikipedia/commons/7/73/Mama_instant_noodle_block.jpg
+        # https://upload.wikimedia.org/wikipedia/commons/7/73/Mama_instant_noodle_block.jpg
 
     @property
     def value(self):
@@ -180,7 +180,7 @@ class Slider(Texture): # carbonara
         _copy.__dict__ = {k: v.copy() if hasattr(v, 'copy') else v for k, v in self.__dict__.items()}
         return _copy
 
-    def get_blit(self):
+    def get_blit(self): # I'm pretty sure this makes the fancy buttons animated (i think)
         _blit = self.tx.copy()
         if self.value != 0:
             if self.value > 0:
@@ -199,7 +199,7 @@ class Slider(Texture): # carbonara
                 else: _blit.blit(slider.tx, (slider.rect.left, slider.rect.top + (slider.rect.h - length)), area=(0, slider.rect.h - length, slider.rect.w, length))
         return _blit
 
-def send_data(bitlist, is_string=False):
+def send_data(bitlist, is_string=False): # function that sends a bitstring to the rover
     if not is_string: bitstring = ''.join(bitlist)
     print("test")
     print(bitstring)
@@ -208,7 +208,7 @@ def send_data(bitlist, is_string=False):
     if connect_query == 'y':
         inter.sendall(bitstring)
 
-def text_controls():
+def text_controls(): # prints the "available" commands and feeds your input into send_data()
     print('Text controlls activated')
     command_list = ('help', 'drive', 'reverse', 'turn right', 'turn left', 'set speed', 'get_speed', 'set turnspeed', 'get_turn', 'steer left', 'steer right', 'stop')
     while True:
@@ -216,7 +216,7 @@ def text_controls():
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
         send_data(f'1{commands}')
 
-def fancy_controls():
+def fancy_controls(): # faNcY
     print("Fancy controlls activated.")
 
     pg.init()
@@ -293,7 +293,7 @@ def fancy_controls():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 inter.close()
-                exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her?
+                exit() #Kasnskje disconnect fra roveren i stedet for bære sys.exit() her? --- Nææææh, mvh ic1cle
             elif joystick and event.type == pg.JOYAXISMOTION and event.axis < 2:
                 axis_input[event.axis] = event.value if abs(event.value) > 0.2 else 0
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
@@ -362,8 +362,8 @@ if __name__ == '__main__':
         if connect_query in ('y', 'yes'):
             connect_query = 'y'
             print('Trying to establish a connection with the rover...')
-            try:
-                inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            try: # tries to connect the socket to the rover
+                inter = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
                 inter.connect((ip, 8080))
             except:
                 print('Could not connect to the rover. Continuing without connection...')
