@@ -236,17 +236,17 @@ def loop():
 					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
-								if command1.substr(0) == 'r':
+								if command1[0] == 'r':
 									queue.radius = command1[2:]
 									print(queue.radius)
-								elif command1.substr(0) == 'd':
+								elif command1[0] == 'd':
 									queue.duration = command1[2:]
 									print(queue.duration)
-								elif command1.substr(0) == 's':
+								elif command1[0] == 's':
 									queue.speed = command1[2:]
 									print(queue.speed)
 								else:
-									event = (command1.substr(0) + 'Event') # makes the "event thing" form earlier
+									event = (command1[0] + 'Event') # makes the "event thing" form earlier
 									queue.append(event)
 						else:
 							command = [arg.strip(' ') for arg in command.split('-')]
