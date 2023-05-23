@@ -100,10 +100,10 @@ class Queue(list):
 		elif isinstance(event, Events.SetupEvent):
 			self.endtime = event.endtime = event.runtime
 		super().append(event)
-		print("queue speed: " + self.speed)
-		print('queue turning: ' + self.turning)
-		print('queue radius: ' + self.turning)
-		print('queue duration: ' + self.turning)
+		print("queue speed: " + str(self.speed))
+		print('queue turning: ' + str(self.turning))
+		print('queue radius: ' + str(self.turning))
+		print('queue duration: ' + str(self.turning))
 
 	def run_next(self):
 		event = self.pop(0)
@@ -242,19 +242,19 @@ def loop():
 							for command1 in command.split('-'):
 								if command1[0] == 'r':
 									queue.radius = command1[2:]
-									print('cmdQr: ' + queue.radius)
-									print('cmdQd: ' + queue.duration)
-									print('cmdQs: ' + queue.speed)
+									print('cmdQr: ' + str(queue.radius))
+									print('cmdQd: ' + str(queue.duration))
+									print('cmdQs: ' + str(queue.speed))
 								elif command1[0] == 'd':
 									queue.duration = command1[2:]
-									print('cmdQr: ' + queue.radius)
-									print('cmdQd: ' + queue.duration)
-									print('cmdQs: ' + queue.speed)
+									print('cmdQr: ' + str(queue.radius))
+									print('cmdQd: ' + str(queue.duration))
+									print('cmdQs: ' + str(queue.speed))
 								elif command1[0] == 's':
 									queue.speed = command1[2:]
-									print('cmdQr: ' + queue.radius)
-									print('cmdQd: ' + queue.duration)
-									print('cmdQs: ' + queue.speed)
+									print('cmdQr: ' + str(queue.radius))
+									print('cmdQd: ' + str(queue.duration))
+									print('cmdQs: ' + str(queue.speed))
 								else:
 									event = (command1[0] + 'Event') # makes the "event thing" form earlier
 									queue.append(event)
