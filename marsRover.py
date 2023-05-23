@@ -233,7 +233,7 @@ def loop():
 				text_controls = int(data[0])
 				data = data[1:]
 				if text_controls:
-					for command in (arg.strip(' ') for arg in data.split('|')): #strips and splits the command so that it can accept arguments
+					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
 								if command1.substr(0) == 'r':
@@ -249,7 +249,7 @@ def loop():
 									event = (command1.substr(0) + 'Event') # makes the "event thing" form earlier
 									queue.append(event)
 						else:
-							command = [arg.strip(' ') for arg in command.split(',')]
+							command = [arg.strip(' ') for arg in command.split('-')]
 							event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
 							event = event_type(int(command[1]))
 							queue.append(event)
