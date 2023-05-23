@@ -237,20 +237,20 @@ def loop():
 				text_controls = int(data[0])
 				data = data[1:]
 				if text_controls:
-					for command in (arg.strip(' ') for arg in data.split('|')): #strips and splits the command so that it can accept arguments
+					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
-								if command1[0] == 'r':
+								if command1[0] == '-r':
 									queue.radius = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
-								elif command1[0] == 'd':
+								elif command1[0] == '-d':
 									queue.duration = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
-								elif command1[0] == 's':
+								elif command1[0] == '-s':
 									queue.speed = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
