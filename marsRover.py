@@ -239,11 +239,17 @@ def loop():
 								if command1[0] == 'r':
 									queue.radius = command1[2:]
 									print(queue.radius)
+									print(queue.duration)
+									print(queue.speed)
 								elif command1[0] == 'd':
 									queue.duration = command1[2:]
+									print(queue.radius)
 									print(queue.duration)
+									print(queue.speed)
 								elif command1[0] == 's':
 									queue.speed = command1[2:]
+									print(queue.radius)
+									print(queue.duration)
 									print(queue.speed)
 								else:
 									event = (command1[0] + 'Event') # makes the "event thing" form earlier
