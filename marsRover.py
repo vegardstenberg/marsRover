@@ -257,11 +257,13 @@ def loop():
 									print('cmdQs: ' + str(queue.speed))
 								else:
 									event = (command1[0] + 'Event') # makes the "event thing" form earlier
+									print(event)
 									queue.append(event)
 						else:
 							command = [arg.strip(' ') for arg in command.split('|')]
 							event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
 							event = event_type(int(command[1]))
+							print(event)
 							queue.append(event)
 
 				else: # if using fancy controlls it prints out speed in the terminal
