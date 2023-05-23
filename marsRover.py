@@ -238,10 +238,13 @@ def loop():
 							for command1 in command.split('-'):
 								if command1.substr(0) == 'r':
 									queue.radius = command1[2:]
+									print(queue.radius)
 								elif command1.substr(0) == 'd':
 									queue.duration = command1[2:]
+									print(queue.duration)
 								elif command1.substr(0) == 's':
 									queue.speed = command1[2:]
+									print(queue.speed)
 								else:
 									event = (command1.substr(0) + 'Event') # makes the "event thing" form earlier
 									queue.append(event)
