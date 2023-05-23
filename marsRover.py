@@ -255,7 +255,7 @@ def loop():
 									event = (command1[0] + 'Event') # makes the "event thing" form earlier
 									queue.append(event)
 						else:
-							command = [arg.strip(' ') for arg in command.split('-')]
+							command = [arg.strip(' ') for arg in command.split('|')]
 							event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
 							event = event_type(int(command[1]))
 							queue.append(event)
