@@ -100,7 +100,7 @@ class Queue(list):
 		elif isinstance(event, Events.SetupEvent):
 			self.endtime = event.endtime = event.runtime
 		super().append(event)
-		print(f'queue speed: {+ self.speed}')
+		print(f"queue speed: {self.speed}")
 		print(f'queue turning: {self.turning}')
 		print(f'queue radius: {self.radius}')
 		print(f'queue duration: {self.duration}')
