@@ -237,17 +237,17 @@ def loop():
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
 								if command1[0] == 'r':
-									queue.radius = command1[2:]
+									queue.radius = command1
 									print(queue.radius)
 									print(queue.duration)
 									print(queue.speed)
 								elif command1[0] == 'd':
-									queue.duration = command1[2:]
+									queue.duration = command1
 									print(queue.radius)
 									print(queue.duration)
 									print(queue.speed)
 								elif command1[0] == 's':
-									queue.speed = command1[2:]
+									queue.speed = command1
 									print(queue.radius)
 									print(queue.duration)
 									print(queue.speed)
