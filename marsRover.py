@@ -28,7 +28,7 @@ class Events: # i honestly don't know, it works though
 			self.duration = td(seconds=duration)
 	class DriveEvent(ActionEvent):
 		def run(self, **kwargs):
-			drive(kwargs['speed'])
+			drive(int(kwargs['speed']))
 
 	class ReverseEvent(ActionEvent):
 		def run(self, **kwargs):
