@@ -249,16 +249,25 @@ def loop():
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
+									print('cmdQt ' + str(queue.turning))
 								elif command1[0] == 'd':
 									queue.duration = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
+									print('cmdQt ' + str(queue.turning))
 								elif command1[0] == 's':
 									queue.speed = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
+									print('cmdQt ' + str(queue.turning))
+								elif command1[0] == 't':
+									queue.turning = command1[2:]
+									print('cmdQr: ' + str(queue.radius))
+									print('cmdQd: ' + str(queue.duration))
+									print('cmdQs: ' + str(queue.speed))
+									print('cmdQt ' + str(queue.turning))
 							""" 						else:
 							if command.find(int) != -1:
 								for commandA in data.split(' '):
