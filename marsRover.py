@@ -32,17 +32,17 @@ class Events: # i honestly don't know, it works though
 
 	class ReverseEvent(ActionEvent):
 		def run(self, **kwargs):
-			reverse(kwargs['speed'])
+			reverse(int(kwargs['speed']))
 
 	class TurnLeftEvent(ActionEvent):
 		def run(self, **kwargs):
 			if tank_controls: turn_left(kwargs['turning'])
-			else: turn_left_steering(kwargs['turning'])
+			else: turn_left_steering(int(kwargs['turning']))
 
 	class TurnRightEvent(ActionEvent):
 		def run(self, **kwargs):
 			if tank_controls: turn_right(kwargs['turning'])
-			else: turn_right_steering(kwargs['turning'])
+			else: turn_right_steering(int(kwargs['turning']))
    
 	class SteerLeftEvent(ActionEvent):
 		def run(self, **kwargs):
@@ -56,11 +56,11 @@ class Events: # i honestly don't know, it works though
 			print(kwargs['speed'])
 			print('kwargs radius')
 			print(kwargs['radius']) """
-			turn_left_steering(kwargs['speed'], kwargs['radius'])
+			turn_left_steering(int(kwargs['speed']), int(kwargs['radius']))
 
 	class SteerRightEvent(ActionEvent):
 		def run(self, speed, radius):
-			turn_right_steering(speed, radius)
+			turn_right_steering(int(speed), int(radius))
 
 	class StopEvent(Event):
 		def run(self, **kwargs):
@@ -73,7 +73,7 @@ class Events: # i honestly don't know, it works though
 
 		def run(self):
 			print(('SetSpeed', queue.speed))
-			return ('speed', queue.speed)
+			return ('speed', int(queue.speed))
 
 	class SetTurnspeedEvent(SetupEvent):
 		def __init__(self, turning):
@@ -83,7 +83,7 @@ class Events: # i honestly don't know, it works though
 
 		def run(self):
 			print(('SetTurnSpeed', queue.turning))
-			return ('turning', queue.turning)
+			return ('turning', int(queue.turning))
 
 class Queue(list):
 	def __init__(self):
