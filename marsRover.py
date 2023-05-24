@@ -238,7 +238,7 @@ def loop():
 				data = data[1:]
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
-						if command.find('-') != -1:
+						if command.find('-') == -1:
 							for command1 in command.split('-'):
 								print(command[0])
 								print(command1[0])
@@ -259,7 +259,7 @@ def loop():
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
-						else:
+							""" 						else:
 							if command.find(int) != -1:
 								for commandA in data.split(' '):
 									speedTemp = commandA[1].strip(' ')
@@ -268,7 +268,7 @@ def loop():
 									if commandA[0].strip(' ').lower == "setspeed":
 										Events.SetSpeedEvent(speedTemp)
 									elif commandA[0].strip(' ').lower == "setturnspeed":
-										Events.SetTurnspeedEvent(speedTemp)
+										Events.SetTurnspeedEvent(speedTemp) """
 										
 					print(data.split('-'))
 					dataMod = [arg.strip(' ') for arg in data.split('-')]
