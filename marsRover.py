@@ -36,12 +36,12 @@ class Events: # i honestly don't know, it works though
 
 	class TurnLeftEvent(ActionEvent):
 		def run(self, **kwargs):
-			if tank_controls: turn_left(kwargs['turning'])
+			if tank_controls: turn_left(int(kwargs['turning']))
 			else: turn_left_steering(int(kwargs['turning']))
 
 	class TurnRightEvent(ActionEvent):
 		def run(self, **kwargs):
-			if tank_controls: turn_right(kwargs['turning'])
+			if tank_controls: turn_right(int(kwargs['turning']))
 			else: turn_right_steering(int(kwargs['turning']))
    
 	class SteerLeftEvent(ActionEvent):
