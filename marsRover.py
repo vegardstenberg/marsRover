@@ -102,7 +102,7 @@ class Queue(list):
 		super().append(event)
 		print("------------------------------------------")
 		print("Current Speed: " + str(self.speed))
-		print('Current Turning: ' + str(self.turning))
+		print('Current Turning Speed: ' + str(self.turning))
 		print('Current Turn Radius: ' + str(self.radius))
 		print('Current Cmd Duration: ' + str(self.duration) + " Seconds")
 		print("------------------------------------------")
