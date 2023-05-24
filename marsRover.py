@@ -59,8 +59,8 @@ class Events: # i honestly don't know, it works though
 			turn_left_steering(int(kwargs['speed']), int(kwargs['radius']))
 
 	class SteerRightEvent(ActionEvent):
-		def run(self, speed, radius):
-			turn_right_steering(int(speed), int(radius))
+		def run(self, **kwargs):
+			turn_left_steering(int(kwargs['speed']), int(kwargs['radius']))
 
 	class StopEvent(Event):
 		def run(self, **kwargs):
@@ -176,8 +176,8 @@ def turn_left(turning):
 
 def turn_left_steering(speed, radius):
 	print('turn left (steering)')
-	print('radius: ' + radius)
-	print('speed: ' + speed)
+	print('radius: ' + str(radius))
+	print('speed: ' + str(speed))
 	if not local_testing:
 		roboclaw.ForwardM1(address[4], speed)
 		roboclaw.ForwardM2(address[4], speed)
@@ -199,8 +199,8 @@ def turn_right(turning):
 
 def turn_right_steering(speed, radius):
 	print('turn right (steering)')
-	print('radius: ' + radius)
-	print('speed: ' + speed)
+	print('radius: ' + str(radius))
+	print('speed: ' + str(speed))
 	if not local_testing:
 		roboclaw.BackwardM1(address[4], speed)
 		roboclaw.BackwardM2(address[4], speed)
