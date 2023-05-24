@@ -69,21 +69,21 @@ class Events: # i honestly don't know, it works though
 	class SetupEvent(Event): pass
 	class SetSpeedEvent(SetupEvent):
 		def __init__(self, speed):
-			self.speed = speed
+			queue.speed = speed
 
 		def run(self):
-			print(('SetSpeed', self.speed))
-			return ('speed', self.speed)
+			print(('SetSpeed', queue.speed))
+			return ('speed', queue.speed)
 
 	class SetTurnspeedEvent(SetupEvent):
 		def __init__(self, turning):
-			self.turning = turning
+			queue.turning = turning
 			print("Turnspeed")
-			print(self.turning)
+			print(queue.turning)
 
 		def run(self):
-			print(('SetTurnSpeed', self.turning))
-			return ('turning', self.turning)
+			print(('SetTurnSpeed', queue.turning))
+			return ('turning', queue.turning)
 
 class Queue(list):
 	def __init__(self):
@@ -102,8 +102,8 @@ class Queue(list):
 		super().append(event)
 		print("queue speed: " + str(self.speed))
 		print('queue turning: ' + str(self.turning))
-		print('queue radius: ' + str(self.turning))
-		print('queue duration: ' + str(self.turning))
+		print('queue radius: ' + str(self.radius))
+		print('queue duration: ' + str(self.duration))
 
 	def run_next(self):
 		event = self.pop(0)
@@ -238,11 +238,12 @@ def loop():
 				data = data[1:]
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
-						if command.find('-') == -1:
+						if command.find('-') != -1:
 							for command1 in command.split('-'):
 								print(command[0])
 								print(command1[0])
 								print(command1)
+								print(command)
 								if command1[0] == 'r':
 									queue.radius = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
@@ -258,16 +259,26 @@ def loop():
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
-								elif 1==1:
-									event = (command[0] + 'Event') # makes the "event thing" form earlier
-									print(event)
-									queue.append(event)
 						else:
-							command = [arg.strip(' ') for arg in command.split('-')]
-							event_type = getattr(Events, command[0].replace("_", " ").title().replace(" ", "") + 'Event')
-							event = event_type(int(command[1]))
-							print(event)
-							queue.append(event)
+							if command.find(int) != -1:
+								for commandA in data.split(' '):
+									speedTemp = commandA[1].strip(' ')
+									print("speedTemp: " + speedTemp)
+									speedTemp.strip(' ')
+									if commandA[0].strip(' ').lower == "setspeed":
+										Events.SetSpeedEvent(speedTemp)
+									elif commandA[0].strip(' ').lower == "setturnspeed":
+										Events.SetTurnspeedEvent(speedTemp)
+										
+					print(data.split('-'))
+					dataMod = [arg.strip(' ') for arg in data.split('-')]
+					print(dataMod)
+					# event = (dataSingle.strip(' ') + 'Event') # makes the "event thing" form earlier
+					event_type = getattr(Events, dataMod[0].replace("_", " ").title().replace(" ", "") + 'Event')
+					print(event_type)
+					event = event_type(int(queue.duration))
+					print(event)
+					queue.append(event)
 
 				else: # if using fancy controlls it prints out speed in the terminal
 					speed = int(data[4:12], 2)
