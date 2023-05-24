@@ -240,6 +240,8 @@ def loop():
 					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
+								print(command[0])
+								print(command[1])
 								if command1[0] == 'r':
 									queue.radius = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
