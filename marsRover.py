@@ -100,10 +100,12 @@ class Queue(list):
 		elif isinstance(event, Events.SetupEvent):
 			self.endtime = event.endtime = event.runtime
 		super().append(event)
+		print("------------------------------------------")
 		print("Current Speed: " + str(self.speed))
 		print('Current Turning: ' + str(self.turning))
 		print('Current Turn Radius: ' + str(self.radius))
 		print('Current Cmd Duration: ' + str(self.duration) + " Seconds")
+		print("------------------------------------------")
 
 	def run_next(self):
 		event = self.pop(0)
