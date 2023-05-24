@@ -258,7 +258,7 @@ def loop():
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
-								elif command
+								elif 1==1:
 									event = (command[0] + 'Event') # makes the "event thing" form earlier
 									print(event)
 									queue.append(event)
