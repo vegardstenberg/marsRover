@@ -217,10 +217,10 @@ def text_controls(): # prints the "available" commands and feeds your input into
         print('------------------------------------------------------------------')
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
         if commands.strip(' ').lower() == "help":
-            print('--------------------------------------------------------------')
+            print('------------------------------------------------------------------')
             print("To use the rover you need to provide certain values \n To provide these you write '-' and what you want to provide \n Available values: \n '-s' // Speed \n '-d' // Duration \n '-t' // Turning Speed \n '-r' // Turning Radius")
             print("Example: drive -d 30 -s 126")
-            print('--------------------------------------------------------------')
+            print('------------------------------------------------------------------')
         else:
             send_data(f'1{commands}')
 
