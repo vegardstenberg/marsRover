@@ -285,9 +285,18 @@ def loop():
 					# event = (dataSingle.strip(' ') + 'Event') # makes the "event thing" form earlier
 					event_type = getattr(Events, dataMod[0].replace("_", " ").title().replace(" ", "") + 'Event')
 					print(event_type)
-					event = event_type(int(queue.duration))
-					print(event)
-					queue.append(event)
+					if dataMod[0].replace("_", " ").title().replace(" ", "") == "SetSpeed":
+						event = event_type(int(queue.speed))
+						print(event)
+						queue.append(event)
+					elif dataMod[0].replace("_", " ").title().replace(" ", "") == "SetTurning":
+						event = event_type(int(queue.turning))
+						print(event)
+						queue.append(event)
+					else:
+						event = event_type(int(queue.duration))
+						print(event)
+						queue.append(event)
 
 				else: # if using fancy controlls it prints out speed in the terminal
 					speed = int(data[4:12], 2)
