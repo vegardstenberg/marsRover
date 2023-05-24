@@ -241,7 +241,8 @@ def loop():
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
 								print(command[0])
-								print(command[1])
+								print(command1[0])
+								print(command1)
 								if command1[0] == 'r':
 									queue.radius = command1[2:]
 									print('cmdQr: ' + str(queue.radius))
@@ -257,7 +258,7 @@ def loop():
 									print('cmdQr: ' + str(queue.radius))
 									print('cmdQd: ' + str(queue.duration))
 									print('cmdQs: ' + str(queue.speed))
-								elif 1==1:
+								elif command
 									event = (command[0] + 'Event') # makes the "event thing" form earlier
 									print(event)
 									queue.append(event)
