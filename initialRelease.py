@@ -201,10 +201,10 @@ class Slider(Texture): # carbonara
 
 def send_data(bitlist, is_string=False): # function that sends a bitstring to the rover
     if not is_string: bitstring = ''.join(bitlist)
-    print("test")
-    print(bitstring)
+    # print("test")
+    # print(bitstring)
     bitstring = f'&{bitstring}&'.encode('utf-8')
-    print(bitstring)
+    # print(bitstring)
     if connect_query == 'y':
         inter.sendall(bitstring)
 
@@ -212,13 +212,17 @@ def text_controls(): # prints the "available" commands and feeds your input into
     print('Text controlls activated')
     command_list = ('help', 'drive', 'reverse', 'turn right', 'turn left', 'set speed', 'get_speed', 'set turnspeed', 'get_turn', 'steer left', 'steer right', 'stop')
     while True:
+        print('------------------------------------------------------------------')
         print('Available commands: \n HELP, DRIVE, REVERSE, TURN LEFT, STEER LEFT, \n TURN RIGHT, STEER RIGHT, SET SPEED, SET TURNSPEED')
+        print('------------------------------------------------------------------')
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
-        if commands.lower.strip(' ') == "help":
+        if commands.strip(' ').lower() == "help":
+            print('--------------------------------------------------------------')
             print("To use the rover you need to provide certain values \n To provide these you write '-' and what you want to provide \n Available values: \n '-s' // Speed \n '-d' // Duration \n '-t' // Turning Speed \n '-r' // Turning Radius")
             print("Example: drive -d 30 -s 126")
-            
-        send_data(f'1{commands}')
+            print('--------------------------------------------------------------')
+        else:
+            send_data(f'1{commands}')
 
 def fancy_controls(): # faNcY
     print("Fancy controlls activated.")
