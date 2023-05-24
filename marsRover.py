@@ -216,6 +216,10 @@ def stop():
 		roboclaw.BackwardM2(address[2], 0)
 		roboclaw.BackwardM1(address[3], 0)
 		roboclaw.BackwardM2(address[3], 0)
+		roboclaw.BackwardM1(address[4], 0)
+		roboclaw.BackwardM2(address[4], 0)
+		roboclaw.BackwardM1(address[5], 0)
+		roboclaw.BackwardM2(address[5], 0)
 
 queue = Queue()
 
