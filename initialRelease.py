@@ -212,8 +212,12 @@ def text_controls(): # prints the "available" commands and feeds your input into
     print('Text controlls activated')
     command_list = ('help', 'drive', 'reverse', 'turn right', 'turn left', 'set speed', 'get_speed', 'set turnspeed', 'get_turn', 'steer left', 'steer right', 'stop')
     while True:
-        print('Available commands: HELP, DRIVE, REVERSE, TURN LEFT, TURN RIGHT, SET SPEED, SET TURNSPEED')
+        print('Available commands: \n HELP, DRIVE, REVERSE, TURN LEFT, STEER LEFT, \n TURN RIGHT, STEER RIGHT, SET SPEED, SET TURNSPEED')
         commands = input('Enter a command (to enter multiple, separate them using "|"):  ').lower()
+        if commands.lower.strip(' ') == "help":
+            print("To use the rover you need to provide certain values \n To provide these you write '-' and what you want to provide \n Available values: \n '-s' // Speed \n '-d' // Duration \n '-t' // Turning Speed \n '-r' // Turning Radius")
+            print("Example: drive -d 30 -s 126")
+            
         send_data(f'1{commands}')
 
 def fancy_controls(): # faNcY

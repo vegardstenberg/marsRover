@@ -270,16 +270,6 @@ def loop():
 									# print('cmdQd: ' + str(queue.duration))
 									# print('cmdQs: ' + str(queue.speed))
 									# print('cmdQt ' + str(queue.turning))
-							""" 						else:
-							if command.find(int) != -1:
-								for commandA in data.split(' '):
-									speedTemp = commandA[1].strip(' ')
-									print("speedTemp: " + speedTemp)
-									speedTemp.strip(' ')
-									if commandA[0].strip(' ').lower == "setspeed":
-										Events.SetSpeedEvent(speedTemp)
-									elif commandA[0].strip(' ').lower == "setturnspeed":
-										Events.SetTurnspeedEvent(speedTemp) """
 										
 					# print(data.split('-'))
 					dataMod = [arg.strip(' ') for arg in data.split('-')]
