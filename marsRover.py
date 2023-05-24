@@ -238,7 +238,7 @@ def loop():
 				data = data[1:]
 				if text_controls:
 					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
-						if command.find('-') == -1:
+						if command.find('-') != -1:
 							for command1 in command.split('-'):
 								print(command[0])
 								print(command1[0])
