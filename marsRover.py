@@ -46,8 +46,8 @@ class Events: # i honestly don't know, it works though
    
 	class SteerLeftEvent(ActionEvent):
 		def run(self, **kwargs):
-			print("kwargs:")
-			print(kwargs)
+			# print("kwargs:")
+			# print(kwargs)
 			"""print("*kwargs:")
 			print(*kwargs)
 			print("**kwargs:")
@@ -78,8 +78,8 @@ class Events: # i honestly don't know, it works though
 	class SetTurnspeedEvent(SetupEvent):
 		def __init__(self, turning):
 			queue.turning = turning
-			print("Turnspeed")
-			print(queue.turning)
+			# print("Turnspeed")
+			# print(queue.turning)
 
 		def run(self):
 			print(('SetTurnSpeed', queue.turning))
@@ -100,10 +100,10 @@ class Queue(list):
 		elif isinstance(event, Events.SetupEvent):
 			self.endtime = event.endtime = event.runtime
 		super().append(event)
-		print("queue speed: " + str(self.speed))
-		print('queue turning: ' + str(self.turning))
-		print('queue radius: ' + str(self.radius))
-		print('queue duration: ' + str(self.duration))
+		print("Current Speed: " + str(self.speed))
+		print('Current Turning: ' + str(self.turning))
+		print('Current Turn Radius: ' + str(self.radius))
+		print('Current Cmd Duration: ' + str(self.duration) + " Seconds")
 
 	def run_next(self):
 		event = self.pop(0)
@@ -162,8 +162,8 @@ def reverse(speed):
 def turn_left(turning):
 	print('turn left')
 	if not local_testing:
-		print("Turnspeed")
-		print(turning)
+		# print("Turnspeed")
+		# print(turning)
 		roboclaw.ForwardM2(address[1], turning)
 		roboclaw.BackwardM1(address[1], turning)
 		roboclaw.ForwardM2(address[2], turning)
@@ -174,10 +174,8 @@ def turn_left(turning):
 
 def turn_left_steering(speed, radius):
 	print('turn left (steering)')
-	print('radius:')
-	print(radius)
-	print('speed:')
-	print(speed)
+	print('radius: ' + radius)
+	print('speed: ' + speed)
 	if not local_testing:
 		roboclaw.ForwardM1(address[4], speed)
 		roboclaw.ForwardM2(address[4], speed)
@@ -187,8 +185,8 @@ def turn_left_steering(speed, radius):
 def turn_right(turning):
 	print('turn right')
 	if not local_testing:
-		print("Turnspeed")
-		print(turning)
+		# print("Turnspeed")
+		# print(turning)
 		roboclaw.ForwardM1(address[1], turning)
 		roboclaw.BackwardM2(address[1], turning)
 		roboclaw.ForwardM1(address[2], turning)
@@ -197,8 +195,10 @@ def turn_right(turning):
 		roboclaw.BackwardM2(address[3], turning)
 
 
-def turn_right_steering(speed):
+def turn_right_steering(speed, radius):
 	print('turn right (steering)')
+	print('radius: ' + radius)
+	print('speed: ' + speed)
 	if not local_testing:
 		roboclaw.BackwardM1(address[4], speed)
 		roboclaw.BackwardM2(address[4], speed)
@@ -240,34 +240,34 @@ def loop():
 					for command in (arg.strip(' ') for arg in data.split('-')): #strips and splits the command so that it can accept arguments
 						if command.find('-') == -1:
 							for command1 in command.split('-'):
-								print(command[0])
-								print(command1[0])
-								print(command1)
-								print(command)
+								# print(command[0])
+								# print(command1[0])
+								# print(command1)
+								# print(command)
 								if command1[0] == 'r':
 									queue.radius = command1[2:]
-									print('cmdQr: ' + str(queue.radius))
-									print('cmdQd: ' + str(queue.duration))
-									print('cmdQs: ' + str(queue.speed))
-									print('cmdQt ' + str(queue.turning))
+									# print('cmdQr: ' + str(queue.radius))
+									# print('cmdQd: ' + str(queue.duration))
+									# print('cmdQs: ' + str(queue.speed))
+									# print('cmdQt ' + str(queue.turning))
 								elif command1[0] == 'd':
 									queue.duration = command1[2:]
-									print('cmdQr: ' + str(queue.radius))
-									print('cmdQd: ' + str(queue.duration))
-									print('cmdQs: ' + str(queue.speed))
-									print('cmdQt ' + str(queue.turning))
+									# print('cmdQr: ' + str(queue.radius))
+									# print('cmdQd: ' + str(queue.duration))
+									# print('cmdQs: ' + str(queue.speed))
+									# print('cmdQt ' + str(queue.turning))
 								elif command1[0] == 's':
 									queue.speed = command1[2:]
-									print('cmdQr: ' + str(queue.radius))
-									print('cmdQd: ' + str(queue.duration))
-									print('cmdQs: ' + str(queue.speed))
-									print('cmdQt ' + str(queue.turning))
+									# print('cmdQr: ' + str(queue.radius))
+									# print('cmdQd: ' + str(queue.duration))
+									# print('cmdQs: ' + str(queue.speed))
+									# print('cmdQt ' + str(queue.turning))
 								elif command1[0] == 't':
 									queue.turning = command1[2:]
-									print('cmdQr: ' + str(queue.radius))
-									print('cmdQd: ' + str(queue.duration))
-									print('cmdQs: ' + str(queue.speed))
-									print('cmdQt ' + str(queue.turning))
+									# print('cmdQr: ' + str(queue.radius))
+									# print('cmdQd: ' + str(queue.duration))
+									# print('cmdQs: ' + str(queue.speed))
+									# print('cmdQt ' + str(queue.turning))
 							""" 						else:
 							if command.find(int) != -1:
 								for commandA in data.split(' '):
@@ -279,23 +279,23 @@ def loop():
 									elif commandA[0].strip(' ').lower == "setturnspeed":
 										Events.SetTurnspeedEvent(speedTemp) """
 										
-					print(data.split('-'))
+					# print(data.split('-'))
 					dataMod = [arg.strip(' ') for arg in data.split('-')]
-					print(dataMod)
+					# print(dataMod)
 					# event = (dataSingle.strip(' ') + 'Event') # makes the "event thing" form earlier
 					event_type = getattr(Events, dataMod[0].replace("_", " ").title().replace(" ", "") + 'Event')
-					print(event_type)
+					# print(event_type)
 					if dataMod[0].replace("_", " ").title().replace(" ", "") == "SetSpeed":
 						event = event_type(int(queue.speed))
-						print(event)
+						# print(event)
 						queue.append(event)
 					elif dataMod[0].replace("_", " ").title().replace(" ", "") == "SetTurning":
 						event = event_type(int(queue.turning))
-						print(event)
+						# print(event)
 						queue.append(event)
 					else:
 						event = event_type(int(queue.duration))
-						print(event)
+						# print(event)
 						queue.append(event)
 
 				else: # if using fancy controlls it prints out speed in the terminal
