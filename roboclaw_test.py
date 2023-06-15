@@ -1,7 +1,7 @@
 from roboclaw import Roboclaw
 from time import sleep
 
-speed = 127
+speed = 126
 address = {
 		1: 0x80, #front motors
 		2: 0x81, #mid motors

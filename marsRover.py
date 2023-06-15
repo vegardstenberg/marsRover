@@ -8,6 +8,8 @@ from datetime import datetime as dt, timedelta as td
 from time import sleep
 import subprocess
 import atexit
+from math import *
+import cmath as cm
 socket.setdefaulttimeout(10)
 tank_controls = True
 
@@ -90,8 +92,22 @@ class Queue(list):
 		self.endtime = None
 		self.speed = 126
 		self.turning = 126
-		self.radius = 0
+		self.radius = 20
 		self.duration = 0
+  
+	def velocityandstuf(self):
+		print("intit velandstuf")
+		vR = int(self.radius)
+		print(vR)
+		v1_3 = ((sqrt(pow(vR, 2)+(12*vR)+180))/(vR+9))
+		v2 = 1
+		v5 = (vR-9)/(vR+9)
+		v4_6 = (sqrt(pow(vR, 2)-12*vR+180)/(vR+9))
+
+		a1_3 = degrees(atan((12)/(sqrt(pow(vR, 2)+(12*vR)+180)-6)))
+		a4_6 = degrees(atan(12/(sqrt(pow(vR, 2)-12*vR+180)-6)))
+		print(v1_3, v2, v5, v4_6, a1_3, a4_6)
+		return v1_3, v2, v5, v4_6, a1_3, a4_6
 
 	def append(self, event):
 		event.runtime = self.endtime if self.endtime else now
@@ -139,6 +155,8 @@ def setup(ip=c.pi_ip):
 
 	roboclaw = Roboclaw("/dev/ttyS0", 38400)
 	roboclaw.Open()
+ 
+	queue.velocityandstuf()
 
 def drive(speed):
 	print('drive')
@@ -178,6 +196,7 @@ def turn_left_steering(speed, radius):
 	print('turn left (steering)')
 	print('radius: ' + str(radius))
 	print('speed: ' + str(speed))
+	queue.velocityandstuf()
 	if not local_testing:
 		roboclaw.ForwardM1(address[4], speed)
 		roboclaw.ForwardM2(address[4], speed)
@@ -201,6 +220,7 @@ def turn_right_steering(speed, radius):
 	print('turn right (steering)')
 	print('radius: ' + str(radius))
 	print('speed: ' + str(speed))
+	queue.velocityandstuf()
 	if not local_testing:
 		roboclaw.BackwardM1(address[4], speed)
 		roboclaw.BackwardM2(address[4], speed)
@@ -251,7 +271,7 @@ def loop():
 								# print(command1)
 								# print(command)
 								if command1[0] == 'r':
-									queue.radius = command1[2:]
+									queue.radius = int(command1[2:])
 									# print('cmdQr: ' + str(queue.radius))
 									# print('cmdQd: ' + str(queue.duration))
 									# print('cmdQs: ' + str(queue.speed))
